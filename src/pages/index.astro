@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Treehouse from '../components/Treehouse.astro';
+import site from '../data/site.json';
+import data from '../data/treehouse.json';
+
+const hrefs = data.hrefs as Record<string, string | null>;
+---
+
+<Base>
+  <main class="home wrap">
+    <section class="scene-col" aria-label="树屋">
+      <Treehouse />
+      <p class="scene-hint">
+        <span class="hint-hover">把鼠标移到树屋里的东西上，点一下就能打开。</span>
+        <span class="hint-touch">点一点树屋里的东西。</span>
+      </p>
+    </section>
+
+    <aside class="side">
+      <div class="intro">
+        <h1>{site.welcome}</h1>
+        <p class="lede">{site.tagline}</p>
+      </div>
+
+      <div class="sky-ctl">
+        <h2 class="side-label" id="sky-label">天色</h2>
+        <div class="seg" role="group" aria-labelledby="sky-label">
+          <button type="button" data-mode-set="auto" aria-pressed="true">跟随当地时间</button>
+          <button type="button" data-mode-set="day" aria-pressed="false">白天</button>
+          <button type="button" data-mode-set="night" aria-pressed="false">夜晚</button>
+        </div>
+      </div>
+
+      <nav class="dir" aria-label="目录">
+        <h2 class="side-label">目录</h2>
+        {
+          data.directory.map((group) => (
+            <div class="dir-group">
+              <h3>{group.title}</h3>
+              <div class="dir-links">
+                {group.links.map(([label, target]) =>
+                  target ? (
+                    <a href={hrefs[target] ?? '/'} data-th-target={target}>
+                      {label}
+                    </a>
+                  ) : (
+                    <a href="/archive">{label}</a>
+                  ),
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </nav>
+    </aside>
+  </main>
+</Base>

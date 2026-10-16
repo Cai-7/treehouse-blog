@@ -1,0 +1,284 @@
+/* Layout: the treehouse fills the first screen and the page ground matches the drawing's sky,
+   so the tree floats on the page. The directory sits beside it on wide screens and below it on phones.
+   Day and night are the site's own two looks, switched by data-mode on <html>. */
+:root {
+  --sky: #f7f0dc;
+  --ink: #3b2a1e;
+  --ink-soft: #6e5641;
+  --paper: #fff9ea;
+  --edge: #3b2a1e;
+  --accent: #d9822b;
+  --chip: #efe0bd;
+  --chip-hover: #f4c76a;
+  --halo: #fff6d8;
+  --shadow: rgba(59, 42, 30, 0.3);
+  --nn: #e07b24;
+  --code-1: #cfe8c4;
+  --code-2: #f6d98b;
+  --code-3: #f2b6a0;
+  --code-4: #b9d8ee;
+  --owl-lid: #8f6a4f;
+  --font-ui: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC",
+    "Source Han Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Kaiti SC", "STKaiti", "KaiTi", "Kai", "AR PL UKai CN", "Noto Serif SC", "Songti SC", serif;
+  color-scheme: light;
+}
+
+:root[data-mode="night"] {
+  --sky: #1e3759;
+  --ink: #f4ead2;
+  --ink-soft: #c3cbdc;
+  --paper: #22426b;
+  --edge: #0e1a2e;
+  --accent: #f2c14e;
+  --chip: #2c4d7a;
+  --chip-hover: #3d6599;
+  --halo: #ffe3a0;
+  --shadow: rgba(4, 10, 22, 0.55);
+  --nn: #ffe08a;
+  --code-1: #1d4d6e;
+  --code-2: #2a5f8a;
+  --code-3: #164061;
+  --code-4: #30709b;
+  --owl-lid: #6e4c33;
+  color-scheme: dark;
+}
+
+html {
+  background: var(--sky);
+  transition: background-color 0.9s ease;
+}
+
+body {
+  margin: 0;
+  background: var(--sky);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background-color 0.9s ease, color 0.9s ease;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: inherit; }
+
+[hidden] { display: none !important; }
+
+img { max-width: 100%; }
+
+:focus-visible {
+  outline: 2px dashed var(--accent);
+  outline-offset: 3px;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding-block: 14px 6px;
+}
+
+.brand {
+  font-family: var(--font-hand);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 4px;
+}
+
+.site-nav a {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.site-nav a:hover { background: var(--chip); }
+
+.mode-toggle {
+  width: 40px;
+  height: 40px;
+  margin-left: 6px;
+  display: inline-grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.mode-toggle svg { width: 20px; height: 20px; }
+.mode-toggle .i-moon { display: none; }
+:root[data-mode="night"] .mode-toggle .i-sun { display: none; }
+:root[data-mode="night"] .mode-toggle .i-moon { display: block; }
+
+/* Home layout */
+.home {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px 44px;
+  padding-block: 4px 48px;
+}
+
+.scene-col {
+  flex: 0 1 auto;
+  width: min(100%, 720px, calc((100vh - 110px) * 0.75));
+  width: min(100%, 720px, calc((100svh - 110px) * 0.75));
+  min-width: min(100%, 320px);
+}
+
+.scene-hint {
+  margin: 8px 0 0;
+  font-size: 14px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.hint-touch { display: none; }
+
+@media (hover: none) {
+  .hint-hover { display: none; }
+  .hint-touch { display: inline; }
+}
+
+.side {
+  flex: 1 1 300px;
+  max-width: 380px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-top: 18px;
+}
+
+.side h1 {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+}
+
+.side-label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.seg button {
+  min-height: 38px;
+  padding: 6px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.seg button:hover { background: var(--chip); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--sky); }
+
+.dir {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dir-group h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dir-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dir-links a {
+  padding: 5px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--ink);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.dir-links a:hover,
+.dir-links a:focus-visible {
+  border-color: var(--ink);
+  background: var(--chip-hover);
+}
+
+/* Placeholder pages */
+.stub {
+  max-width: 640px;
+  padding-block: 48px 64px;
+}
+
+.stub h1 {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+.stub p { color: var(--ink-soft); }
+
+.stub-back {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.stub-back:hover { background: var(--chip); }
+
+@media (max-width: 640px) {
+  .site-header { padding-block: 10px 2px; }
+  .brand { font-size: 22px; }
+  .site-nav a { padding: 6px 8px; font-size: 14px; }
+  .side { padding-top: 4px; }
+  .side h1 { font-size: 26px; }
+}

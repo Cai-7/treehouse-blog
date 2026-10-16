@@ -1,0 +1,5 @@
+# 统一用 LF 换行，Windows 上也不会出现整文件的换行改动
+* text=auto eol=lf
+*.png binary
+*.webp binary
+*.jpg binary

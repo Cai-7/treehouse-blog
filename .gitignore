@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+__pycache__/
+*.log
+
+# 由 tools/build_preview.py 生成
+preview/

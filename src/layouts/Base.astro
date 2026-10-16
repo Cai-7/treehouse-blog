@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+import data from '../data/treehouse.json';
+import modeScript from '../scripts/mode.js?raw';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : site.name;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f0dc" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- 在页面绘制前确定昼夜，避免闪一下白天再变夜晚 -->
+    <script is:inline set:html={modeScript}></script>
+  </head>
+  <body>
+    <header class="site-header wrap">
+      <a class="brand" href="/">{site.name}</a>
+      <nav class="site-nav" aria-label="主导航">
+        {data.nav.map(([label, href]) => <a href={href}>{label}</a>)}
+        <button class="mode-toggle" type="button" data-mode-toggle aria-label="切换到夜晚">
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"></circle>
+            <path
+              d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"></path>
+          </svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20 14.6A8.3 8.3 0 0 1 9.4 4a8.3 8.3 0 1 0 10.6 10.6z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </nav>
+    </header>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,35 @@
+---
+// Placeholder pages for every section the treehouse links to, so no link leads to a 404
+// while the real section pages are being built.
+import Base from '../layouts/Base.astro';
+import data from '../data/treehouse.json';
+
+export function getStaticPaths() {
+  const pages = new Map<string, { title: string; desc: string }>();
+  for (const it of data.items) {
+    if (it.href) pages.set(it.href, { title: it.section, desc: it.desc });
+  }
+  const sections: [string, string][] = [
+    ['/tech', '技术'],
+    ['/life', '生活'],
+    ['/lab', '实验室'],
+    ['/archive', '归档'],
+    ['/about', '关于'],
+  ];
+  for (const [href, title] of sections) {
+    if (!pages.has(href)) pages.set(href, { title, desc: '' });
+  }
+  return [...pages].map(([href, props]) => ({ params: { slug: href.slice(1) }, props }));
+}
+
+const { title, desc } = Astro.props;
+---
+
+<Base title={title}>
+  <main class="wrap stub">
+    <h1>{title}</h1>
+    {desc && <p>{desc}</p>}
+    <p>这个栏目还在搭建中，文章很快就会住进来。</p>
+    <a class="stub-back" href="/">回到树屋</a>
+  </main>
+</Base>

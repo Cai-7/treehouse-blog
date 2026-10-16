@@ -1,0 +1,1271 @@
+{
+ "scene": {
+  "w": 1086,
+  "h": 1448
+ },
+ "items": [
+  {
+   "id": "lights",
+   "name": "神经网络灯串",
+   "section": "彩蛋",
+   "kicker": "彩蛋",
+   "desc": "一个 3-4-4-3 的小网络。点一下，看一次前向传播。",
+   "href": null,
+   "extra": "nn"
+  },
+  {
+   "id": "telescope",
+   "name": "望远镜",
+   "section": "实验室",
+   "kicker": "树冠 · 实验室",
+   "desc": "机器学习的小 demo 都放在树冠上，透过望远镜去看。",
+   "href": "/lab",
+   "extra": null
+  },
+  {
+   "id": "flag",
+   "name": "小红旗",
+   "section": "年度目标",
+   "kicker": "树冠 · 年度目标",
+   "desc": "今年想做成的事，插在树的最高处。",
+   "href": "/goals",
+   "extra": null
+  },
+  {
+   "id": "birdhouse",
+   "name": "鸟屋",
+   "section": "友链",
+   "kicker": "友链",
+   "desc": "每个鸟屋通向一位朋友的博客。",
+   "href": "/friends",
+   "extra": null
+  },
+  {
+   "id": "owl",
+   "name": "猫头鹰",
+   "section": "搜索",
+   "kicker": "搜索",
+   "desc": "想找哪篇文章，问它。天黑以后，它的眼睛会亮。",
+   "href": "/search",
+   "extra": "owl"
+  },
+  {
+   "id": "lamp",
+   "name": "拉绳灯",
+   "section": "白天和夜晚",
+   "kicker": "白天和夜晚",
+   "desc": "拉一下灯绳，天就黑了；再拉一下，天又亮了。",
+   "href": null,
+   "extra": "lamp"
+  },
+  {
+   "id": "photos",
+   "name": "晾衣绳上的照片",
+   "section": "摄影",
+   "kicker": "生活 · 摄影",
+   "desc": "晾在绳子上的照片，就是相册。",
+   "href": "/life/photos",
+   "extra": null
+  },
+  {
+   "id": "plants",
+   "name": "窗台盆栽",
+   "section": "日常",
+   "kicker": "生活 · 日常",
+   "desc": "几盆慢慢长大的植物，记录平常的日子。",
+   "href": "/life/daily",
+   "extra": null
+  },
+  {
+   "id": "record",
+   "name": "唱片机",
+   "section": "音乐",
+   "kicker": "生活 · 音乐",
+   "desc": "最近在循环的歌。",
+   "href": "/life/music",
+   "extra": "record"
+  },
+  {
+   "id": "piano",
+   "name": "钢琴",
+   "section": "弹琴",
+   "kicker": "生活 · 弹琴",
+   "desc": "练琴记录和喜欢的曲子。下面这排琴键可以弹。",
+   "href": "/life/piano",
+   "extra": "piano"
+  },
+  {
+   "id": "books",
+   "name": "树洞书架",
+   "section": "读书",
+   "kicker": "生活 · 读书",
+   "desc": "树干里的树洞，放着读过的书和读书笔记。",
+   "href": "/life/reading",
+   "extra": null
+  },
+  {
+   "id": "screen",
+   "name": "投影幕布",
+   "section": "影视与游戏",
+   "kicker": "生活 · 影视与游戏",
+   "desc": "看过的电影、玩过的游戏，都投在这块幕布上。",
+   "href": "/life/screen",
+   "extra": null
+  },
+  {
+   "id": "suitcase",
+   "name": "行李箱和地图",
+   "section": "旅行",
+   "kicker": "生活 · 旅行",
+   "desc": "去过的地方和走过的路线。",
+   "href": "/life/travel",
+   "extra": null
+  },
+  {
+   "id": "hammock",
+   "name": "吊床",
+   "section": "随笔",
+   "kicker": "生活 · 随笔",
+   "desc": "躺着写下的碎碎念。",
+   "href": "/life/notes",
+   "extra": null
+  },
+  {
+   "id": "chime",
+   "name": "风铃",
+   "section": "订阅",
+   "kicker": "订阅",
+   "desc": "订阅更新。点一下，听听风铃。",
+   "href": "/subscribe",
+   "extra": "chime"
+  },
+  {
+   "id": "desk",
+   "name": "双屏书桌",
+   "section": "前端",
+   "kicker": "技术 · 前端",
+   "desc": "屏幕上滚动的，是最新一篇前端文章的代码。",
+   "href": "/tech/frontend",
+   "extra": "desk"
+  },
+  {
+   "id": "board",
+   "name": "黑板",
+   "section": "机器学习",
+   "kicker": "技术 · 机器学习",
+   "desc": "公式推导和模型笔记都写在这里。",
+   "href": "/tech/ml",
+   "extra": null
+  },
+  {
+   "id": "pegboard",
+   "name": "工具墙",
+   "section": "工具与踩坑",
+   "kicker": "技术 · 工具与踩坑",
+   "desc": "折腾工具、排查问题的记录，挂满一整面墙。",
+   "href": "/tech/tools",
+   "extra": null
+  },
+  {
+   "id": "blueprint",
+   "name": "图纸桶",
+   "section": "Now",
+   "kicker": "技术 · Now",
+   "desc": "最近在忙什么，摊开图纸就知道。",
+   "href": "/now",
+   "extra": null
+  },
+  {
+   "id": "cabinet",
+   "name": "档案柜",
+   "section": "项目复盘",
+   "kicker": "技术 · 项目复盘",
+   "desc": "项目复盘和论文笔记，每个抽屉是一类整理好的长文。",
+   "href": "/tech/projects",
+   "extra": null
+  },
+  {
+   "id": "basket",
+   "name": "绳索吊篮",
+   "section": "楼层电梯",
+   "kicker": "楼层电梯",
+   "desc": "坐上吊篮，去树屋的另一层看看。",
+   "href": null,
+   "extra": "basket"
+  },
+  {
+   "id": "mailbox",
+   "name": "信箱",
+   "section": "留言板",
+   "kicker": "留言板",
+   "desc": "给我写一封信。",
+   "href": "/guestbook",
+   "extra": null
+  },
+  {
+   "id": "sign",
+   "name": "木牌",
+   "section": "关于",
+   "kicker": "关于",
+   "desc": "写着这里的名字。想知道树屋的主人是谁，从这里进去。",
+   "href": "/about",
+   "extra": "sign"
+  }
+ ],
+ "layers": [
+  {
+   "key": "lights",
+   "item": "lights",
+   "name": "神经网络灯串",
+   "label": "神经网络灯串：彩蛋",
+   "box": [
+    27.256,
+    49.448,
+    41.989,
+    11.74
+   ],
+   "scale": 1.0,
+   "origin": "50% 50%",
+   "tip": "above",
+   "hit": [
+    0.88,
+    5.29,
+    97.59,
+    70.59
+   ],
+   "cut": false,
+   "extra": "nn"
+  },
+  {
+   "key": "telescope",
+   "item": "telescope",
+   "name": "望远镜",
+   "label": "望远镜：实验室",
+   "box": [
+    52.118,
+    3.729,
+    7.919,
+    8.978
+   ],
+   "scale": 1.15,
+   "origin": "50% 100%",
+   "tip": "below",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "flag",
+   "item": "flag",
+   "name": "小红旗",
+   "label": "小红旗：年度目标",
+   "box": [
+    60.221,
+    1.381,
+    6.998,
+    7.597
+   ],
+   "scale": 1.15,
+   "origin": "12% 100%",
+   "tip": "below",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "birdhouse1",
+   "item": "birdhouse",
+   "name": "鸟屋",
+   "label": "鸟屋：友链",
+   "box": [
+    12.431,
+    15.124,
+    7.919,
+    6.354
+   ],
+   "scale": 1.15,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "birdhouse2",
+   "item": "birdhouse",
+   "name": "鸟屋",
+   "label": "鸟屋：友链",
+   "box": [
+    8.471,
+    53.867,
+    7.919,
+    6.285
+   ],
+   "scale": 1.15,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "owl",
+   "item": "owl",
+   "name": "猫头鹰",
+   "label": "猫头鹰：搜索",
+   "box": [
+    86.648,
+    21.409,
+    5.064,
+    5.11
+   ],
+   "scale": 1.2,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": "owl"
+  },
+  {
+   "key": "lamp",
+   "item": "lamp",
+   "name": "拉绳灯",
+   "label": "拉绳灯：白天和夜晚",
+   "box": [
+    35.727,
+    21.892,
+    6.538,
+    4.696
+   ],
+   "scale": 1.15,
+   "origin": "50% 0%",
+   "tip": "above",
+   "hit": [
+    -2.82,
+    -25.0,
+    104.23,
+    200.0
+   ],
+   "cut": true,
+   "extra": "lamp"
+  },
+  {
+   "key": "photos",
+   "item": "photos",
+   "name": "晾衣绳上的照片",
+   "label": "晾衣绳上的照片：摄影",
+   "box": [
+    30.11,
+    30.732,
+    13.352,
+    3.177
+   ],
+   "scale": 1.12,
+   "origin": "50% 0%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "plants",
+   "item": "plants",
+   "name": "窗台盆栽",
+   "label": "窗台盆栽：日常",
+   "box": [
+    18.969,
+    31.63,
+    8.011,
+    5.456
+   ],
+   "scale": 1.12,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "record",
+   "item": "record",
+   "name": "唱片机",
+   "label": "唱片机：音乐",
+   "box": [
+    18.692,
+    39.157,
+    8.564,
+    8.011
+   ],
+   "scale": 1.1,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": "record"
+  },
+  {
+   "key": "piano",
+   "item": "piano",
+   "name": "钢琴",
+   "label": "钢琴：弹琴",
+   "box": [
+    27.532,
+    35.359,
+    16.39,
+    11.188
+   ],
+   "scale": 1.07,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": "piano"
+  },
+  {
+   "key": "books",
+   "item": "books",
+   "name": "树洞书架",
+   "label": "树洞书架：读书",
+   "box": [
+    46.685,
+    26.727,
+    6.354,
+    14.088
+   ],
+   "scale": 1.08,
+   "origin": "50% 50%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "screen",
+   "item": "screen",
+   "name": "投影幕布",
+   "label": "投影幕布：影视与游戏",
+   "box": [
+    54.972,
+    25.345,
+    15.562,
+    13.536
+   ],
+   "scale": 1.06,
+   "origin": "50% 0%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "suitcase",
+   "item": "suitcase",
+   "name": "行李箱和地图",
+   "label": "行李箱和地图：旅行",
+   "box": [
+    57.919,
+    40.608,
+    12.615,
+    6.492
+   ],
+   "scale": 1.1,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "hammock",
+   "item": "hammock",
+   "name": "吊床",
+   "label": "吊床：随笔",
+   "box": [
+    74.862,
+    38.329,
+    14.825,
+    6.975
+   ],
+   "scale": 1.08,
+   "origin": "50% 0%",
+   "tip": "above",
+   "hit": [
+    -11.18,
+    -74.26,
+    128.57,
+    178.22
+   ],
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "chime",
+   "item": "chime",
+   "name": "风铃",
+   "label": "风铃：订阅",
+   "box": [
+    79.926,
+    31.63,
+    3.039,
+    7.459
+   ],
+   "scale": 1.12,
+   "origin": "50% 0%",
+   "tip": "above",
+   "hit": [
+    -30.3,
+    -7.41,
+    181.82,
+    111.11
+   ],
+   "cut": true,
+   "extra": "chime"
+  },
+  {
+   "key": "desk",
+   "item": "desk",
+   "name": "双屏书桌",
+   "label": "双屏书桌：前端",
+   "box": [
+    22.376,
+    63.398,
+    23.204,
+    11.74
+   ],
+   "scale": 1.05,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": "desk"
+  },
+  {
+   "key": "board",
+   "item": "board",
+   "name": "黑板",
+   "label": "黑板：机器学习",
+   "box": [
+    41.16,
+    58.633,
+    13.168,
+    8.771
+   ],
+   "scale": 1.08,
+   "origin": "50% 50%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "pegboard",
+   "item": "pegboard",
+   "name": "工具墙",
+   "label": "工具墙：工具与踩坑",
+   "box": [
+    56.446,
+    58.287,
+    13.904,
+    10.083
+   ],
+   "scale": 1.07,
+   "origin": "50% 50%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "blueprint",
+   "item": "blueprint",
+   "name": "图纸桶",
+   "label": "图纸桶：Now",
+   "box": [
+    61.234,
+    66.989,
+    4.604,
+    7.942
+   ],
+   "scale": 1.12,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "cabinet",
+   "item": "cabinet",
+   "name": "档案柜",
+   "label": "档案柜：项目复盘",
+   "box": [
+    66.575,
+    63.052,
+    6.814,
+    12.017
+   ],
+   "scale": 1.08,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "basket",
+   "item": "basket",
+   "name": "绳索吊篮",
+   "label": "绳索吊篮：楼层电梯",
+   "box": [
+    82.689,
+    59.116,
+    7.551,
+    19.268
+   ],
+   "scale": 1.06,
+   "origin": "50% 0%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": "basket"
+  },
+  {
+   "key": "mailbox",
+   "item": "mailbox",
+   "name": "信箱",
+   "label": "信箱：留言板",
+   "box": [
+    54.604,
+    84.047,
+    6.998,
+    4.696
+   ],
+   "scale": 1.15,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": null
+  },
+  {
+   "key": "sign",
+   "item": "sign",
+   "name": "木牌",
+   "label": "木牌：关于",
+   "box": [
+    19.797,
+    82.528,
+    10.681,
+    14.572
+   ],
+   "scale": 1.08,
+   "origin": "50% 100%",
+   "tip": "above",
+   "hit": null,
+   "cut": true,
+   "extra": "sign"
+  }
+ ],
+ "bulbs": [
+  {
+   "col": 0,
+   "x": 5.48,
+   "y": 14.71
+  },
+  {
+   "col": 0,
+   "x": 5.48,
+   "y": 38.82
+  },
+  {
+   "col": 0,
+   "x": 5.48,
+   "y": 62.94
+  },
+  {
+   "col": 1,
+   "x": 28.29,
+   "y": 16.47
+  },
+  {
+   "col": 1,
+   "x": 28.51,
+   "y": 40.59
+  },
+  {
+   "col": 1,
+   "x": 28.29,
+   "y": 65.29
+  },
+  {
+   "col": 1,
+   "x": 28.51,
+   "y": 89.41
+  },
+  {
+   "col": 2,
+   "x": 65.13,
+   "y": 17.06
+  },
+  {
+   "col": 2,
+   "x": 64.91,
+   "y": 41.18
+  },
+  {
+   "col": 2,
+   "x": 64.91,
+   "y": 66.47
+  },
+  {
+   "col": 2,
+   "x": 65.35,
+   "y": 91.18
+  },
+  {
+   "col": 3,
+   "x": 94.3,
+   "y": 17.06
+  },
+  {
+   "col": 3,
+   "x": 94.3,
+   "y": 42.94
+  },
+  {
+   "col": 3,
+   "x": 94.08,
+   "y": 67.06
+  }
+ ],
+ "links": [
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 14.71,
+   "x2": 28.29,
+   "y2": 16.47
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 14.71,
+   "x2": 28.51,
+   "y2": 40.59
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 14.71,
+   "x2": 28.29,
+   "y2": 65.29
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 14.71,
+   "x2": 28.51,
+   "y2": 89.41
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 38.82,
+   "x2": 28.29,
+   "y2": 16.47
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 38.82,
+   "x2": 28.51,
+   "y2": 40.59
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 38.82,
+   "x2": 28.29,
+   "y2": 65.29
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 38.82,
+   "x2": 28.51,
+   "y2": 89.41
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 62.94,
+   "x2": 28.29,
+   "y2": 16.47
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 62.94,
+   "x2": 28.51,
+   "y2": 40.59
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 62.94,
+   "x2": 28.29,
+   "y2": 65.29
+  },
+  {
+   "col": 0,
+   "x1": 5.48,
+   "y1": 62.94,
+   "x2": 28.51,
+   "y2": 89.41
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 16.47,
+   "x2": 65.13,
+   "y2": 17.06
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 16.47,
+   "x2": 64.91,
+   "y2": 41.18
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 16.47,
+   "x2": 64.91,
+   "y2": 66.47
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 16.47,
+   "x2": 65.35,
+   "y2": 91.18
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 40.59,
+   "x2": 65.13,
+   "y2": 17.06
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 40.59,
+   "x2": 64.91,
+   "y2": 41.18
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 40.59,
+   "x2": 64.91,
+   "y2": 66.47
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 40.59,
+   "x2": 65.35,
+   "y2": 91.18
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 65.29,
+   "x2": 65.13,
+   "y2": 17.06
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 65.29,
+   "x2": 64.91,
+   "y2": 41.18
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 65.29,
+   "x2": 64.91,
+   "y2": 66.47
+  },
+  {
+   "col": 1,
+   "x1": 28.29,
+   "y1": 65.29,
+   "x2": 65.35,
+   "y2": 91.18
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 89.41,
+   "x2": 65.13,
+   "y2": 17.06
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 89.41,
+   "x2": 64.91,
+   "y2": 41.18
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 89.41,
+   "x2": 64.91,
+   "y2": 66.47
+  },
+  {
+   "col": 1,
+   "x1": 28.51,
+   "y1": 89.41,
+   "x2": 65.35,
+   "y2": 91.18
+  },
+  {
+   "col": 2,
+   "x1": 65.13,
+   "y1": 17.06,
+   "x2": 94.3,
+   "y2": 17.06
+  },
+  {
+   "col": 2,
+   "x1": 65.13,
+   "y1": 17.06,
+   "x2": 94.3,
+   "y2": 42.94
+  },
+  {
+   "col": 2,
+   "x1": 65.13,
+   "y1": 17.06,
+   "x2": 94.08,
+   "y2": 67.06
+  },
+  {
+   "col": 2,
+   "x1": 64.91,
+   "y1": 41.18,
+   "x2": 94.3,
+   "y2": 17.06
+  },
+  {
+   "col": 2,
+   "x1": 64.91,
+   "y1": 41.18,
+   "x2": 94.3,
+   "y2": 42.94
+  },
+  {
+   "col": 2,
+   "x1": 64.91,
+   "y1": 41.18,
+   "x2": 94.08,
+   "y2": 67.06
+  },
+  {
+   "col": 2,
+   "x1": 64.91,
+   "y1": 66.47,
+   "x2": 94.3,
+   "y2": 17.06
+  },
+  {
+   "col": 2,
+   "x1": 64.91,
+   "y1": 66.47,
+   "x2": 94.3,
+   "y2": 42.94
+  },
+  {
+   "col": 2,
+   "x1": 64.91,
+   "y1": 66.47,
+   "x2": 94.08,
+   "y2": 67.06
+  },
+  {
+   "col": 2,
+   "x1": 65.35,
+   "y1": 91.18,
+   "x2": 94.3,
+   "y2": 17.06
+  },
+  {
+   "col": 2,
+   "x1": 65.35,
+   "y1": 91.18,
+   "x2": 94.3,
+   "y2": 42.94
+  },
+  {
+   "col": 2,
+   "x1": 65.35,
+   "y1": 91.18,
+   "x2": 94.08,
+   "y2": 67.06
+  }
+ ],
+ "stars": [
+  {
+   "x": 79.558,
+   "y": 1.588
+  },
+  {
+   "x": 3.867,
+   "y": 4.558
+  },
+  {
+   "x": 7.459,
+   "y": 8.356
+  },
+  {
+   "x": 96.133,
+   "y": 14.572
+  },
+  {
+   "x": 2.578,
+   "y": 23.55
+  },
+  {
+   "x": 4.328,
+   "y": 37.638
+  },
+  {
+   "x": 95.58,
+   "y": 42.334
+  },
+  {
+   "x": 5.249,
+   "y": 53.867
+  },
+  {
+   "x": 95.212,
+   "y": 65.677
+  },
+  {
+   "x": 93.186,
+   "y": 71.823
+  },
+  {
+   "x": 10.129,
+   "y": 74.24
+  },
+  {
+   "x": 4.88,
+   "y": 76.588
+  },
+  {
+   "x": 15.654,
+   "y": 81.492
+  },
+  {
+   "x": 87.753,
+   "y": 86.188
+  }
+ ],
+ "floors": [
+  {
+   "id": "canopy",
+   "label": "树冠",
+   "box": [
+    100,
+    0,
+    1086,
+    420
+   ]
+  },
+  {
+   "id": "living",
+   "label": "起居室",
+   "box": [
+    170,
+    300,
+    1010,
+    700
+   ]
+  },
+  {
+   "id": "workshop",
+   "label": "工作坊",
+   "box": [
+    190,
+    700,
+    860,
+    1110
+   ]
+  },
+  {
+   "id": "ground",
+   "label": "树下",
+   "box": [
+    150,
+    1080,
+    1000,
+    1448
+   ]
+  }
+ ],
+ "directory": [
+  {
+   "title": "技术 · 楼下工作坊",
+   "links": [
+    [
+     "前端",
+     "desk"
+    ],
+    [
+     "机器学习",
+     "board"
+    ],
+    [
+     "工具与踩坑",
+     "pegboard"
+    ],
+    [
+     "项目复盘",
+     "cabinet"
+    ],
+    [
+     "Now",
+     "blueprint"
+    ]
+   ]
+  },
+  {
+   "title": "生活 · 楼上起居室",
+   "links": [
+    [
+     "读书",
+     "books"
+    ],
+    [
+     "音乐",
+     "record"
+    ],
+    [
+     "弹琴",
+     "piano"
+    ],
+    [
+     "摄影",
+     "photos"
+    ],
+    [
+     "旅行",
+     "suitcase"
+    ],
+    [
+     "随笔",
+     "hammock"
+    ],
+    [
+     "影视与游戏",
+     "screen"
+    ],
+    [
+     "日常",
+     "plants"
+    ]
+   ]
+  },
+  {
+   "title": "树上的其他角落",
+   "links": [
+    [
+     "实验室",
+     "telescope"
+    ],
+    [
+     "年度目标",
+     "flag"
+    ],
+    [
+     "友链",
+     "birdhouse"
+    ],
+    [
+     "留言板",
+     "mailbox"
+    ],
+    [
+     "搜索",
+     "owl"
+    ],
+    [
+     "订阅",
+     "chime"
+    ],
+    [
+     "关于",
+     "sign"
+    ],
+    [
+     "归档",
+     null
+    ]
+   ]
+  }
+ ],
+ "nav": [
+  [
+   "技术",
+   "/tech"
+  ],
+  [
+   "生活",
+   "/life"
+  ],
+  [
+   "实验室",
+   "/lab"
+  ],
+  [
+   "归档",
+   "/archive"
+  ],
+  [
+   "关于",
+   "/about"
+  ]
+ ],
+ "hrefs": {
+  "lights": null,
+  "telescope": "/lab",
+  "flag": "/goals",
+  "birdhouse": "/friends",
+  "owl": "/search",
+  "lamp": null,
+  "photos": "/life/photos",
+  "plants": "/life/daily",
+  "record": "/life/music",
+  "piano": "/life/piano",
+  "books": "/life/reading",
+  "screen": "/life/screen",
+  "suitcase": "/life/travel",
+  "hammock": "/life/notes",
+  "chime": "/subscribe",
+  "desk": "/tech/frontend",
+  "board": "/tech/ml",
+  "pegboard": "/tech/tools",
+  "blueprint": "/now",
+  "cabinet": "/tech/projects",
+  "basket": null,
+  "mailbox": "/guestbook",
+  "sign": "/about"
+ }
+}
