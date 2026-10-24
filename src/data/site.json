@@ -1,7 +1,13 @@
 {
-  "name": "我的树屋",
-  "welcome": "欢迎来到我的树屋",
+  "name": "蔡煦嘉",
+  "welcome": "你好，我是蔡煦嘉",
   "tagline": "一棵树，两层楼：楼下的工作坊写代码，楼上的起居室过日子。",
-  "description": "一个技术和生活住在同一棵树上的个人博客。",
-  "url": "https://example.com"
+  "description": "蔡煦嘉的个人博客：前端、机器学习，和一些日常。",
+  "url": "https://xujiacai.netlify.app",
+  "giscus": {
+    "repo": "Cai-7/treehouse-comments",
+    "repoId": "R_kgDOVNLo8g",
+    "category": "Announcements",
+    "categoryId": "DIC_kwDOVNLo8s4DIt91"
+  }
 }

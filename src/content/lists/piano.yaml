@@ -1,0 +1,24 @@
+# 钢琴：谱子 + 练琴记录。
+# songs：放在乐谱本里的曲子，会画成五线谱，可以「示范」和「跟弹」。
+#   notes 的写法（用空格隔开）：
+#     C4 D4 E4        音名 + 八度。C4 是中央 C，范围 C4 到 C6
+#     F#4 Bb4         升号写 #，降号写 b
+#     G4*2            时值（拍数），不写就是 1 拍；*0.5 半拍，*1.5 附点四分，*4 全音符
+#     R*1             休止
+#     |               小节线（每两小节排成一行）
+#   bpm：每分钟多少拍。
+# items：练琴记录，会写在乐谱页边的空白处。
+sample: true
+songs:
+  - title: 小星星
+    composer: 法国民谣
+    bpm: 96
+    notes: "C4 C4 G4 G4 | A4 A4 G4*2 | F4 F4 E4 E4 | D4 D4 C4*2 | G4 G4 F4 F4 | E4 E4 D4*2 | G4 G4 F4 F4 | E4 E4 D4*2 | C4 C4 G4 G4 | A4 A4 G4*2 | F4 F4 E4 E4 | D4 D4 C4*2"
+  - title: 欢乐颂
+    composer: 贝多芬
+    bpm: 108
+    notes: "E4 E4 F4 G4 | G4 F4 E4 D4 | C4 C4 D4 E4 | E4*1.5 D4*0.5 D4*2 | E4 E4 F4 G4 | G4 F4 E4 D4 | C4 C4 D4 E4 | D4*1.5 C4*0.5 C4*2"
+items:
+  - { date: 2026-10-15, minutes: 30, piece: 卡农, note: 左手终于不打架了 }
+  - { date: 2026-10-12, minutes: 20, piece: 卡农, note: 慢速分手练 }
+  - { date: 2026-10-08, minutes: 25, piece: 小星星变奏曲, note: 第三段变奏 }

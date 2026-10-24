@@ -1,0 +1,9 @@
+# 唱片机：最近在循环的歌。每首是唱片箱里的一张唱片。
+#   color 封套颜色（不填自动配色）；url 去听原曲的链接（不填就不显示）
+# 唱盘上放的是按歌名谱的一小段示意曲，不是原曲。
+sample: true
+items:
+  - { title: Summer, artist: 久石让, color: "#d9a441" }
+  - { title: Merry Christmas Mr. Lawrence, artist: 坂本龙一, color: "#6c7fb0" }
+  - { title: 旅行的意义, artist: 陈绮贞, color: "#4f7f78" }
+  - { title: Yellow, artist: Coldplay, color: "#e8c547" }

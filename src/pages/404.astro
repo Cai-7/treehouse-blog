@@ -1,0 +1,26 @@
+---
+// Lost: the resident peers around for a page that isn't there.
+import Base from '../layouts/Base.astro';
+import { ITEMS } from '../lib/scene';
+
+const doors = ['board', 'books', 'hammock', 'telescope'].map((id) => ITEMS[id]).filter((it) => it && it.href);
+---
+
+<Base title="走丢了">
+  <main class="page-view wrap">
+    <div class="page nf sheet">
+      <img class="nf-me" src="/treehouse/me/peek.webp" alt="树屋主人扶着眼镜四处张望" width="256" height="480" />
+      <div>
+        <p class="sh-kicker">404</p>
+        <h1 class="page-title">这根树枝上没有房间</h1>
+        <p class="page-lead">你要找的页面不在这棵树上，可能搬家了，也可能从来没盖过。</p>
+        <p><a class="page-back nf-home" href="/">回到树屋</a></p>
+        <p class="cl-meta">或者去这些地方看看：</p>
+        <p class="cl-tags">
+          {doors.map((it) => <a href={it.href!}>{it.section}</a>)}
+          <a href="/search">问问猫头鹰</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</Base>

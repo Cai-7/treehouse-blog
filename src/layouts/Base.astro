@@ -1,16 +1,38 @@
 ---
+// The shell every page shares: a branch along the top (name plaque, hanging nav tags, map and sky
+// buttons), the treehouse map drawer, the ground along the bottom, and on inner pages a small
+// treehouse in the corner that marks where you are. Mirrored for the preview in tools/render.py.
+import '../styles/fonts.css';
 import '../styles/global.css';
+import '../styles/layout.css';
 import site from '../data/site.json';
 import data from '../data/treehouse.json';
+import { locate } from '../lib/scene';
 import modeScript from '../scripts/mode.js?raw';
 
 interface Props {
   title?: string;
   description?: string;
+  /** the object or floor this page belongs to (marks the little treehouse in the corner) */
+  here?: string;
+  /** the home page: no corner treehouse */
+  home?: boolean;
 }
 
-const { title, description = site.description } = Astro.props;
+const { title, description = site.description, here, home = false } = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : site.name;
+// Comments switch on once both ids from giscus.app are filled in (see README「留言和评论」).
+const giscus = site.giscus && site.giscus.repoId && site.giscus.categoryId ? JSON.stringify(site.giscus).replace(/</g, '\\u003c') : '';
+const hrefs = data.hrefs as Record<string, string | null>;
+const spot = home ? null : (locate(here) ?? { x: 50, y: 50, name: '树屋', href: '/', bx: 50, by: 50, none: true });
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const year = new Date().getFullYear();
+// the background: a few leaves drifting down by day, fireflies by night (positions are fixed, so the build is stable)
+const leaves = [
+  [6, 22, -3, 14, 'o'], [17, 27, -11, 11, 'y'], [29, 20, -7, 16, 'g'], [41, 31, -16, 12, 'o'], [53, 24, -1, 15, 'y'],
+  [64, 29, -13, 11, 'g'], [76, 21, -9, 14, 'o'], [88, 26, -5, 12, 'y'], [95, 33, -18, 15, 'g'],
+];
+const flies = [[8, 62, 0], [18, 28, -2], [27, 74, -4], [38, 40, -1], [52, 80, -5], [61, 34, -3], [72, 68, -6], [83, 30, -2], [92, 58, -4], [47, 52, -7]];
 ---
 
 <!doctype html>
@@ -25,31 +47,154 @@ const pageTitle = title ? `${title} · ${site.name}` : site.name;
     <!-- 在页面绘制前确定昼夜，避免闪一下白天再变夜晚 -->
     <script is:inline set:html={modeScript}></script>
   </head>
-  <body>
-    <header class="site-header wrap">
-      <a class="brand" href="/">{site.name}</a>
-      <nav class="site-nav" aria-label="主导航">
-        {data.nav.map(([label, href]) => <a href={href}>{label}</a>)}
-        <button class="mode-toggle" type="button" data-mode-toggle aria-label="切换到夜晚">
-          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"></circle>
-            <path
-              d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"></path>
-          </svg>
-          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M20 14.6A8.3 8.3 0 0 1 9.4 4a8.3 8.3 0 1 0 10.6 10.6z"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linejoin="round"></path>
-          </svg>
-        </button>
-      </nav>
+  <body class={home ? 'is-home' : 'is-inner'}>
+    <div class="backdrop" aria-hidden="true">
+      <div class="bd-far">
+        <i class="bd-cloud" style="--cx:6%;--cy:12%;--cw:230px;--ct:150s;--cd:-20s"></i>
+        <i class="bd-cloud" style="--cx:58%;--cy:6%;--cw:180px;--ct:190s;--cd:-90s"></i>
+        <i class="bd-cloud" style="--cx:82%;--cy:20%;--cw:260px;--ct:170s;--cd:-50s"></i>
+      </div>
+      <svg class="bd-hill bd-hill-1" viewBox="0 0 1440 360" preserveAspectRatio="none"><path d="M0 170 C130 90 250 120 380 150 C520 182 600 70 760 84 C920 98 1010 190 1160 150 C1280 118 1370 96 1440 120 V360 H0z"></path></svg>
+      <svg class="bd-hill bd-hill-2" viewBox="0 0 1440 300" preserveAspectRatio="none"><path d="M0 150 C150 110 270 170 420 160 C570 150 650 90 820 110 C980 130 1080 190 1230 160 C1330 140 1390 120 1440 130 V300 H0z"></path></svg>
+      <svg class="bd-trunk" viewBox="0 0 320 900" preserveAspectRatio="xMinYMid slice"><path d="M-20 900 C20 700 70 600 60 460 C52 340 10 280 -30 210 L-30 150 C20 220 70 280 96 380 C120 300 150 250 210 200 C250 168 290 170 330 150 L330 190 C280 200 250 224 214 262 C166 314 150 380 140 470 C126 620 150 760 190 900z"></path><path d="M96 380 C130 410 190 410 240 372 C262 354 292 352 330 358 L330 384 C294 384 266 392 244 410 C190 456 120 460 90 430z"></path></svg>
+      <div class="bd-leaves">
+        {leaves.map(([x, t, d, s, c]) => <i class={`bd-leaf c-${c}`} style={`--x:${x}%;--t:${t}s;--d:${d}s;--s:${s}px`}></i>)}
+      </div>
+      <div class="bd-flies">
+        {flies.map(([x, y, d]) => <i style={`--x:${x}%;--y:${y}%;--d:${d}s`}></i>)}
+      </div>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="branch" aria-hidden="true"></div>
+      <div class="hdr wrap">
+        <a class="brand" href="/" aria-label={`${site.name} · 回到树屋`}>
+          <span class="brand-board">{site.name}</span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          {
+            data.nav.map(([label, href]) => (
+              <a class="tag" href={href} aria-current={path === href || path.startsWith(href + '/') ? 'page' : undefined}>
+                {label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="hdr-tools">
+          <button class="hdr-btn map-open" type="button" data-map-open aria-controls="th-map" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.5 6.5l5.5-2.5 6 2.5 5.5-2.5v13.5l-5.5 2.5-6-2.5-5.5 2.5z M9 4v13.5 M15 6.5V20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path>
+            </svg>
+            <span>树屋地图</span>
+          </button>
+          <div class="sky-menu">
+            <button class="hdr-btn sky-open mode-toggle" type="button" data-sky-open aria-expanded="false" aria-controls="sky-pop" aria-label="天色">
+              <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+              <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 14.6A8.3 8.3 0 0 1 9.4 4a8.3 8.3 0 1 0 10.6 10.6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+            <div class="sky-pop" id="sky-pop" role="group" aria-label="天色" hidden>
+              <p class="sky-pop-title">天色</p>
+              <button type="button" data-mode-set="auto" aria-pressed="true">跟随当地时间</button>
+              <button type="button" data-mode-set="day" aria-pressed="false">白天</button>
+              <button type="button" data-mode-set="night" aria-pressed="false">夜晚</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
+
     <slot />
+
+    <nav class="dock" aria-label="快捷导航">
+      <a href="/" aria-current={path === '/' ? 'page' : undefined}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7M6 9.5V20h12V9.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+        <span>首页</span>
+      </a>
+      <a href="/tech" aria-current={path === '/tech' || path.startsWith('/tech/') || path.startsWith('/posts/') ? 'page' : undefined}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"></rect><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path></svg>
+        <span>技术</span>
+      </a>
+      <button type="button" data-map-open aria-controls="th-map" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5l5.5-2.5 6 2.5 5.5-2.5v13.5l-5.5 2.5-6-2.5-5.5 2.5z M9 4v13.5 M15 6.5V20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path></svg>
+        <span>地图</span>
+      </button>
+      <a href="/about" aria-current={path === '/about' ? 'page' : undefined}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.9"></circle><path d="M5 20c.8-4 3.5-6 7-6s6.2 2 7 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path></svg>
+        <span>关于</span>
+      </a>
+    </nav>
+
+    <div class="th-map" id="th-map" hidden>
+      <div class="th-map-backdrop" data-map-close></div>
+      <section class="th-map-sheet" role="dialog" aria-modal="true" aria-labelledby="th-map-title">
+        <div class="th-map-head">
+          <h2 id="th-map-title">树屋地图</h2>
+          <button class="th-map-close" type="button" data-map-close aria-label="关上地图">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+          </button>
+        </div>
+        <nav class="th-map-main" aria-label="主要入口">
+          <a href="/">回到树屋</a>
+          {data.nav.map(([label, href]) => <a href={href}>{label}</a>)}
+        </nav>
+        {
+          data.directory.map((group) => (
+            <div class="th-map-group">
+              <h3>{group.title}</h3>
+              <div class="th-map-links">
+                {group.links.map(([label, target]) =>
+                  target ? (
+                    <a href={hrefs[target] ?? '/'} data-th-target={target}>{label}</a>
+                  ) : (
+                    <a href="/archive">{label}</a>
+                  ),
+                )}
+              </div>
+            </div>
+          ))
+        }
+        <p class="th-map-foot">
+          <a href="/rss.xml">RSS 订阅</a>
+        </p>
+      </section>
+    </div>
+
+    {
+      spot && (
+        <a class={(spot as any).none ? 'locator no-dot' : 'locator'} href={spot.href} aria-label={(spot as any).none ? '回到树屋' : `你在树屋的${spot.name}，点这里回到树屋`} style={`--lx:${spot.x}%;--ly:${spot.y}%;--bx:${spot.bx}%;--by:${spot.by}%`}>
+          <span class="loc-tree" aria-hidden="true"><i class="loc-dot"></i></span>
+          <span class="loc-text">{(spot as any).none ? <Fragment>回到树屋</Fragment> : <Fragment><small>你在</small>{spot.name}</Fragment>}</span>
+        </a>
+      )
+    }
+
+    {giscus && <script is:inline type="application/json" id="th-giscus" set:html={giscus} />}
+    {giscus && <script>import '../scripts/giscus.js';</script>}
+    <script>import '../scripts/site.js';</script>
+
+    <footer class="site-footer">
+      <div class="ground" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path class="g-far" d="M0 70 C120 40 220 52 330 62 C450 74 520 34 650 40 C790 47 860 74 990 64 C1110 55 1190 30 1300 42 C1370 50 1410 58 1440 56 V120 H0z"></path>
+          <path class="g-near" d="M0 92 C140 78 260 84 380 90 C520 97 640 80 780 82 C930 84 1040 98 1180 92 C1300 87 1380 80 1440 84 V120 H0z"></path>
+        </svg>
+      </div>
+      <div class="ft wrap">
+        <nav class="ft-links" aria-label="页脚">
+          <a href="/">回到树屋</a>
+          <button type="button" data-map-open aria-controls="th-map">树屋地图</button>
+          <a href="/about">关于{site.name}</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+        <p class="ft-credit">
+          © {year} {site.name} · 英文字体 testType 01，设计：Xiaoyuan Gao / <a href="https://www.notyourtype.nl" rel="noopener">notyourtypefoundry</a>
+        </p>
+      </div>
+    </footer>
   </body>
 </html>

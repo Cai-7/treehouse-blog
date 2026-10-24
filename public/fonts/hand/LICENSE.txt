@@ -1,0 +1,8 @@
+TH Hand is a subset of Yozai（悠哉字体）, made for this website.
+
+Copyright 2020, 2024 LXGW (https://github.com/lxgw/yozai-font)
+Original Font Data Copyright (C) Y.OzVox.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL
+
+https://scripts.sil.org/OFL

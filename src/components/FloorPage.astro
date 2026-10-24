@@ -1,0 +1,39 @@
+---
+// One floor of the treehouse as a row of doors: every object on it, cut out of the drawing.
+import { ITEMS, cutOf } from '../lib/scene';
+import { loadPosts, PANEL_KIND } from '../lib/content';
+
+interface Props {
+  ids: string[];
+}
+
+const { ids } = Astro.props;
+const posts = await loadPosts();
+const cards = ids
+  .map((id) => ITEMS[id])
+  .filter((it) => it && it.href)
+  .map((it) => {
+    const n = posts.filter((p) => p.item === it.id).length;
+    return { it, cut: cutOf(it.id), count: PANEL_KIND[it.id] === 'posts' ? `${n} 篇` : '' };
+  });
+---
+
+<ul class="fp">
+  {
+    cards.map(({ it, cut, count }) => (
+      <li>
+        <a class="fp-card" href={it.href!}>
+          <span class="fp-art">
+            {cut && <img class="sh-day" src={cut.day} alt="" decoding="async" loading="lazy" />}
+            {cut && <img class="sh-night" src={cut.night} alt="" decoding="async" loading="lazy" />}
+          </span>
+          <span class="fp-text">
+            <b>{it.section}</b>
+            <small>{it.name}{count && ` · ${count}`}</small>
+            <span>{it.desc}</span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

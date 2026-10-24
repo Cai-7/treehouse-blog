@@ -1,35 +1,103 @@
 ---
-// Placeholder pages for every section the treehouse links to, so no link leads to a 404
-// while the real section pages are being built.
+// Every section page: one per treehouse object with an address (/tech/posts, /life/reading, …),
+// plus the two floors (技术, 生活) and 归档. Articles get a readable index; the other objects are
+// drawn at full size (same code as their panel on the home page) with a plain list below.
 import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Neighbours from '../components/Neighbours.astro';
+import PostIndex from '../components/PostIndex.astro';
+import ObjectStage from '../components/ObjectStage.astro';
+import Collection from '../components/Collection.astro';
+import FloorPage from '../components/FloorPage.astro';
+import Rings from '../components/Rings.astro';
 import data from '../data/treehouse.json';
+import { PANEL_KIND, loadPosts, type Post } from '../lib/content';
+import { ITEMS, LIFE, TECH } from '../lib/scene';
 
-export function getStaticPaths() {
-  const pages = new Map<string, { title: string; desc: string }>();
-  for (const it of data.items) {
-    if (it.href) pages.set(it.href, { title: it.section, desc: it.desc });
+type Page = { kind: 'object' | 'floor' | 'archive'; title: string; item?: string; floor?: 'tech' | 'life' };
+
+export async function getStaticPaths() {
+  const pages = new Map<string, Page>();
+  for (const it of data.items as { id: string; section: string; href: string | null }[]) {
+    if (!it.href || pages.has(it.href) || !PANEL_KIND[it.id]) continue;
+    pages.set(it.href, { kind: 'object', title: it.section, item: it.id });
   }
-  const sections: [string, string][] = [
-    ['/tech', '技术'],
-    ['/life', '生活'],
-    ['/lab', '实验室'],
-    ['/archive', '归档'],
-    ['/about', '关于'],
-  ];
-  for (const [href, title] of sections) {
-    if (!pages.has(href)) pages.set(href, { title, desc: '' });
-  }
-  return [...pages].map(([href, props]) => ({ params: { slug: href.slice(1) }, props }));
+  pages.set('/tech', { kind: 'floor', title: '技术', floor: 'tech' });
+  pages.set('/life', { kind: 'floor', title: '生活', floor: 'life' });
+  pages.set('/archive', { kind: 'archive', title: '归档' });
+  return [...pages].map(([href, page]) => ({ params: { slug: href.slice(1) }, props: { page } }));
 }
 
-const { title, desc } = Astro.props;
+const { page } = Astro.props as { page: Page };
+const posts = await loadPosts();
+const it = page.item ? ITEMS[page.item] : undefined;
+const kind = page.item ? PANEL_KIND[page.item] : '';
+const mine: Post[] = page.item ? posts.filter((p) => p.item === page.item) : [];
+const latest = (list: Post[]) => (list.length ? `最近一篇：${list[0].dateLabel}` : '');
+const TOPICS: [string, string][] = [['frontend', '前端'], ['ml', '机器学习']];
+const floorPosts = page.floor ? posts.filter((p) => p.item && (page.floor === 'tech' ? TECH : LIFE).includes(p.item)) : [];
+const years = [...new Set(posts.map((p) => p.date.getUTCFullYear()))];
 ---
 
-<Base title={title}>
-  <main class="wrap stub">
-    <h1>{title}</h1>
-    {desc && <p>{desc}</p>}
-    <p>这个栏目还在搭建中，文章很快就会住进来。</p>
-    <a class="stub-back" href="/">回到树屋</a>
+<Base title={page.title} description={it?.desc} here={page.item ?? (page.floor === 'tech' ? 'workshop' : page.floor === 'life' ? 'living' : undefined)}>
+  <main class="page-view wrap">
+    <div class={kind && kind !== 'posts' ? 'page is-object' : 'page'}>
+      {
+        page.kind === 'object' && kind === 'posts' && (
+          <Fragment>
+            <SectionHead item={page.item} title={page.title} desc={it!.desc} stats={[`${mine.length} 篇`, latest(mine)].filter(Boolean).join(' · ')} />
+            <section class="sheet">
+              <PostIndex posts={mine} topics={page.item === 'board' ? TOPICS : undefined} />
+            </section>
+            <Neighbours item={page.item} />
+          </Fragment>
+        )
+      }
+      {
+        page.kind === 'object' && kind !== 'posts' && (
+          <Fragment>
+            <SectionHead item={page.item} title={page.title} desc={it!.desc} />
+            <ObjectStage ids={[page.item!]}>
+              <p class="page-object-hint">（这里是可以玩的{it!.name}，需要打开浏览器的 JavaScript。下面是同样内容的清单。）</p>
+            </ObjectStage>
+            <section class="sheet">
+              <Collection item={page.item!} kind={kind} />
+            </section>
+            <Neighbours item={page.item} />
+          </Fragment>
+        )
+      }
+      {
+        page.kind === 'floor' && (
+          <Fragment>
+            <SectionHead
+              label={page.title}
+              title={page.floor === 'tech' ? '技术 · 楼下工作坊' : '生活 · 楼上起居室'}
+              desc={page.floor === 'tech' ? '写代码、推公式、修工具的地方。' : '读书、听歌、弹琴、过日子的地方。'}
+              stats={`${floorPosts.length} 篇文章`}
+              floor={page.floor === 'tech' ? 'workshop' : 'living'}
+            />
+            <FloorPage ids={page.floor === 'tech' ? TECH : LIFE} />
+            <section class="sheet">
+              <h2 class="page-h2 sheet-h2">这一层的文章</h2>
+              <PostIndex posts={floorPosts} topics={page.floor === 'tech' ? TOPICS : undefined} />
+            </section>
+            <Neighbours />
+          </Fragment>
+        )
+      }
+      {
+        page.kind === 'archive' && (
+          <Fragment>
+            <SectionHead label="归档" title="归档" desc="一圈年轮是一年。点一圈，跳到那一年写的文章。" stats={`${posts.length} 篇 · ${years.length} 年`} floor="ground" />
+            <Rings posts={posts} />
+            <section class="sheet">
+              <PostIndex posts={posts} />
+            </section>
+            <Neighbours />
+          </Fragment>
+        )
+      }
+    </div>
   </main>
 </Base>

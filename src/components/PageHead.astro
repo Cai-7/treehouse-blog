@@ -1,0 +1,42 @@
+---
+// Breadcrumbs and the strip of the treehouse drawing at the top of article and section pages.
+import { ITEMS, GROUP_OF, bannerStyle } from '../lib/scene';
+
+interface Props {
+  item?: string; // the object the page belongs to
+  label?: string; // last crumb when there is no object (技术, 生活, 归档)
+}
+
+const { item, label } = Astro.props;
+const it = item ? ITEMS[item] : undefined;
+const banner = it ? bannerStyle(it.id) : null;
+---
+
+<nav class="crumbs" aria-label="位置">
+  <a href="/">树屋</a>
+  {
+    it && GROUP_OF[it.id] && (
+      <Fragment>
+        <span aria-hidden="true">›</span>
+        <span>{GROUP_OF[it.id]}</span>
+      </Fragment>
+    )
+  }
+  {
+    it && (
+      <Fragment>
+        <span aria-hidden="true">›</span>
+        <a href={`/#${it.id}`}>{it.name}</a>
+      </Fragment>
+    )
+  }
+  {
+    label && (
+      <Fragment>
+        <span aria-hidden="true">›</span>
+        <span>{label}</span>
+      </Fragment>
+    )
+  }
+</nav>
+{banner && <div class="page-banner" style={banner} role="img" aria-label={`树屋里的${it!.name}`} />}

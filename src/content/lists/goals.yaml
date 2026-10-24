@@ -1,0 +1,14 @@
+# 小红旗：今年的目标。done / total 决定进度条。
+# history（可不填）：往年的目标，会在年度目标页里按年份折起来。
+sample: true
+year: 2026
+items:
+  - { title: 让树屋博客上线, done: 6, total: 10, unit: 步 }
+  - { title: 写完 12 篇文章, done: 3, total: 12, unit: 篇 }
+  - { title: 读 20 本书, done: 8, total: 20, unit: 本 }
+  - { title: 完整弹下一首曲子, done: 1, total: 2, unit: 首 }
+history:
+  - year: 2025
+    items:
+      - { title: 学会用 PyTorch 训练一个模型, done: 1, total: 1, unit: 个 }
+      - { title: 读 15 本书, done: 12, total: 15, unit: 本 }

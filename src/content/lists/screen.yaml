@@ -1,0 +1,8 @@
+# 投影幕布：看过的电影、玩过的游戏。每一条是片单里的一张票根，点开就在幕布上放映。
+#   kind 写“电影”“剧集”或“游戏”；rating 1–5；color 海报底色；note 一句短评（可不填）
+sample: true
+items:
+  - { title: 灵魂旅人, kind: 游戏, rating: 5, color: "#3f6e8c", note: 把「告别」做成了一件可以动手完成的事，通关那晚一直没关机。 }
+  - { title: 星露谷物语, kind: 游戏, rating: 5, color: "#6b8e4e", note: 种地、钓鱼、发呆，不知不觉就是一个冬天。 }
+  - { title: 千与千寻, kind: 电影, rating: 5, color: "#c8553d", note: 每次看都注意到不一样的小角落。 }
+  - { title: 星际穿越, kind: 电影, rating: 4, color: "#2f4858", note: 书架后面那一幕，看一次哭一次。 }

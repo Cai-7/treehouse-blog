@@ -1,0 +1,6 @@
+# 望远镜 · 实验室：可以在线玩的小 demo。status 写“可以玩”或“在做”。
+sample: true
+items:
+  - { title: 灯串里的小网络, desc: 起居室下面那串灯泡，点一下看一次前向传播, status: 可以玩 }
+  - { title: 浏览器里的手写数字识别, desc: 在画板上写个数字，模型在你的浏览器里猜, status: 在做 }
+  - { title: 给树屋换个季节, desc: 用图像生成把秋天的树屋变成冬天, status: 在做 }

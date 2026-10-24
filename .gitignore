@@ -7,3 +7,6 @@ __pycache__/
 
 # 由 tools/build_preview.py 生成
 preview/
+
+# 原始中文字体（几 MB 一个），只提交 tools/build_fonts.py 生成的小块
+tools/fonts-src/

@@ -1,0 +1,29 @@
+---
+import type { Post } from '../lib/content';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length ? (
+    <ul class="page-list">
+      {posts.map((p) => (
+        <li>
+          <a href={p.href}>
+            <span class="pl-title">{p.title}</span>
+            {p.summary && <span class="pl-sum">{p.summary}</span>}
+            <span class="pl-meta">
+              {[p.dateLabel, `${p.minutes} 分钟`, ...p.tags].join(' · ')}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="page-empty">这里还没有文章。</p>
+  )
+}

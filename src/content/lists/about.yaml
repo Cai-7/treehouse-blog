@@ -1,0 +1,24 @@
+# 木牌 · 关于。首页的木牌面板用 name / lines / tags / links；二级页面再用下面的详细字段。
+name: 蔡煦嘉
+lines:
+  - 电子科技大学 · 2025 级本科生
+  - 软件工程专业
+tags: [前端开发, 机器学习]
+bio: 蔡煦嘉，电子科技大学 2025 级软件工程本科生。擅长前端开发与机器学习，喜欢把想法做成既能跑起来、又好看的东西。
+school: 电子科技大学
+major: 软件工程
+grade: 2025 级本科
+academic:
+  - { label: GPA（满分 4.0）, value: "3.98" }
+  - { label: 大学英语四级, value: "634" }
+  - { label: 大学英语六级, value: "566" }
+awards:
+  - { name: 服务外包创新创业大赛, level: 国家级三等奖, tier: 国家级 }
+  - { name: 网络挑战赛, level: 省级三等奖, tier: 省级 }
+research:
+  - { org: 电子科技大学 · 医药知识工程与智能软件实验室, role: 实验室成员, mentor: 张云 }
+  - { org: 南京大学实验室, role: 科研实践, mentor: 于畅 }
+links:
+  - { label: GitHub, url: "https://github.com/Cai-7" }
+# QQ 邮箱：只显示成文字，方便复制。
+email: "3539268446@qq.com"

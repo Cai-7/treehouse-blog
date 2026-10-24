@@ -1,0 +1,28 @@
+# 双屏书桌 · 技术栈。左边屏幕是前端，右边屏幕是机器学习，每项技术是屏幕上的一个文件。
+# 每项：
+#   name   名字            file   在编辑器里显示的文件名（随便起，像 react.tsx）
+#   level  1 入门 / 2 会用 / 3 熟练 / 4 精通
+#   since  开始用的年份    used   用它做过的东西（可以写文章或项目的名字）
+#   note   一句话
+# 下面是示例，换成你自己的。
+sample: true
+screens:
+  - id: frontend
+    title: 前端
+    items:
+      - { name: HTML / CSS, file: style.css, level: 3, since: 2020, used: [这棵树屋, 容器查询排版], note: 最喜欢用 CSS 解决本来要写 JS 的事。 }
+      - { name: TypeScript, file: types.ts, level: 3, since: 2021, used: [组件库, 数据可视化面板], note: 先把类型想清楚，代码就写一半了。 }
+      - { name: React, file: App.tsx, level: 3, since: 2021, used: [后台管理系统, 个人项目], note: 主力框架。 }
+      - { name: Vue, file: App.vue, level: 2, since: 2022, used: [活动页], note: 写过几个中小项目。 }
+      - { name: Astro, file: astro.config.mjs, level: 2, since: 2026, used: [这棵树屋], note: 内容站的首选。 }
+      - { name: Canvas / SVG, file: scene.svg, level: 2, since: 2022, used: [树屋里的乐谱和地图], note: 手画交互图形。 }
+      - { name: Vite / 工程化, file: vite.config.ts, level: 2, since: 2022, used: [构建配置], note: 能把构建跑快一点。 }
+  - id: ml
+    title: 机器学习
+    items:
+      - { name: Python, file: main.py, level: 3, since: 2019, used: [数据处理, 训练脚本], note: 第一门认真学的语言。 }
+      - { name: PyTorch, file: model.py, level: 3, since: 2020, used: [图像分类, 小型 Transformer], note: 训练和调试都在这里。 }
+      - { name: NumPy / Pandas, file: data.ipynb, level: 3, since: 2019, used: [数据清洗, 特征工程], note: 处理数据的老朋友。 }
+      - { name: scikit-learn, file: baseline.py, level: 2, since: 2020, used: [基线模型], note: 先跑一个基线再说。 }
+      - { name: OpenCV, file: vision.py, level: 2, since: 2021, used: [从插画里抠出 23 个物品], note: 传统视觉方法也很好用。 }
+      - { name: Transformers / LLM, file: llm.py, level: 2, since: 2023, used: [微调实验, 检索问答], note: 最近在学的方向。 }

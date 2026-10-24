@@ -1,0 +1,5 @@
+# 信箱 · 留言板。正式上线后留言来自 giscus（访客用 GitHub 账号留言），这里只是示例。
+sample: true
+items:
+  - { name: 示例访客, date: 2026-10-16, text: 留言会像这样一条条显示。 }
+  - { name: 另一位示例访客, date: 2026-10-14, text: 访客用 GitHub 登录后就能留言。 }

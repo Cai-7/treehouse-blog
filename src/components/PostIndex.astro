@@ -1,0 +1,119 @@
+---
+// Every article in a set, newest first, grouped by year, with tag chips (and topic tabs for the
+// blackboard). Without JavaScript the chips are links to tag pages; with it they filter in place.
+import { tagCounts, tagHref, type Post } from '../lib/content';
+
+interface Props {
+  posts: Post[];
+  topics?: [string, string][]; // [value, label]
+  filter?: boolean;
+  limitTags?: number;
+}
+
+const { posts, topics, filter = true, limitTags = 14 } = Astro.props;
+const tags = tagCounts(posts).slice(0, limitTags);
+const years = [...new Set(posts.map((p) => p.date.getUTCFullYear()))].sort((a, b) => b - a);
+const TOPIC_LABEL: Record<string, string> = Object.fromEntries(topics ?? []);
+---
+
+<div class="pi" data-pi>
+  {
+    filter && (topics?.length || tags.length > 1) && (
+      <div class="pi-filters">
+        {topics && topics.length > 0 && (
+          <div class="pi-topics" role="group" aria-label="分类">
+            <button type="button" class="pi-topic is-on" data-topic="" aria-pressed="true">全部 <small>{posts.length}</small></button>
+            {topics.map(([v, l]) => (
+              <button type="button" class="pi-topic" data-topic={v} aria-pressed="false">
+                {l} <small>{posts.filter((p) => p.topic === v).length}</small>
+              </button>
+            ))}
+          </div>
+        )}
+        {tags.length > 1 && (
+          <div class="pi-tags" aria-label="标签">
+            {tags.map(([t, n]) => (
+              <a class="pi-tag" href={tagHref(t)} data-tag={t}>
+                {t}<small>{n}</small>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+  {
+    years.map((y) => (
+      <section class="pi-year" id={`y${y}`} data-year={y}>
+        <h2 class="pi-year-title">{y}</h2>
+        <ul class="pi-list">
+          {posts
+            .filter((p) => p.date.getUTCFullYear() === y)
+            .map((p) => (
+              <li class="pi-item" data-tags={p.tags.join('|')} data-topic={p.topic ?? ''}>
+                <time class="pi-date" datetime={p.date.toISOString().slice(0, 10)}>{p.dateLabel}</time>
+                <div class="pi-main">
+                  <a class="pi-title" href={p.href}>{p.title}</a>
+                  {p.summary && <p class="pi-sum">{p.summary}</p>}
+                  <p class="pi-meta">
+                    {p.topic && TOPIC_LABEL[p.topic] && <span class="pi-badge">{TOPIC_LABEL[p.topic]}</span>}
+                    <span>{p.minutes} 分钟</span>
+                    {p.tags.map((t) => <a href={tagHref(t)}>#{t}</a>)}
+                  </p>
+                </div>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+  {!posts.length && <p class="page-empty">这里还没有文章。</p>}
+  <p class="page-empty pi-none" hidden>没有符合条件的文章。</p>
+</div>
+
+<script>
+  // Topic tabs and tag chips filter the list in place; a tag click becomes a toggle.
+  document.querySelectorAll<HTMLElement>('[data-pi]').forEach((root) => {
+    let topic = '';
+    let tag = '';
+    const items = [...root.querySelectorAll<HTMLElement>('.pi-item')];
+    const none = root.querySelector<HTMLElement>('.pi-none');
+    function apply() {
+      let shown = 0;
+      items.forEach((li) => {
+        const ok = (!topic || li.dataset.topic === topic) && (!tag || (li.dataset.tags ?? '').split('|').includes(tag));
+        li.hidden = !ok;
+        if (ok) shown++;
+      });
+      root.querySelectorAll<HTMLElement>('.pi-year').forEach((s) => {
+        s.hidden = ![...s.querySelectorAll<HTMLElement>('.pi-item')].some((li) => !li.hidden);
+      });
+      if (none) none.hidden = shown > 0;
+      root.querySelectorAll<HTMLElement>('.pi-tag').forEach((a) => {
+        const on = a.dataset.tag === tag;
+        a.classList.toggle('is-on', on);
+        a.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+    root.querySelectorAll<HTMLButtonElement>('.pi-topic').forEach((b) => {
+      b.addEventListener('click', () => {
+        topic = b.dataset.topic ?? '';
+        root.querySelectorAll<HTMLButtonElement>('.pi-topic').forEach((x) => {
+          x.classList.toggle('is-on', x === b);
+          x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+        });
+        apply();
+      });
+    });
+    root.querySelectorAll<HTMLAnchorElement>('.pi-tag').forEach((a) => {
+      a.setAttribute('role', 'button');
+      a.setAttribute('aria-pressed', 'false');
+      a.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        tag = tag === a.dataset.tag ? '' : (a.dataset.tag ?? '');
+        apply();
+      });
+    });
+  });
+</script>

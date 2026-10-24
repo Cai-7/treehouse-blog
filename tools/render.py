@@ -1,15 +1,19 @@
 """Shared HTML rendering for the treehouse home page.
 
-The Astro components render the same markup from src/data/treehouse.json; this module exists so
-the page can also be built as a single static file (tools/build_preview.py) without Node.
+The Astro components render the same markup from src/data/treehouse.json and src/content/; this module
+exists so the page can also be built as a single static file (tools/build_preview.py) without Node.
 """
 import html
 import json
 from pathlib import Path
 
+from content import build_panels, search_index
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = json.loads((ROOT / "src/data/treehouse.json").read_text())
 SITE = json.loads((ROOT / "src/data/site.json").read_text())
+SW, SH = DATA["scene"]["w"], DATA["scene"]["h"]
+ITEMS = {it["id"]: it for it in DATA["items"]}
 
 E = html.escape
 
@@ -30,6 +34,15 @@ CODE_INDENT = [0, 10, 10, 20, 10, 0, 10, 20, 10, 0]
 # Monitor screens (scene px, slightly inset from the bezel) and the desk layer box.
 SCREENS = [(302, 929, 61, 40), (376, 928, 59, 40)]
 
+# Directory groups: tech = first group, life = second.
+GROUP_OF = {}
+for g in DATA["directory"]:
+    for _label, target in g["links"]:
+        if target:
+            GROUP_OF.setdefault(target, g["title"])
+TECH = [t for _l, t in DATA["directory"][0]["links"] if t]
+LIFE = [t for _l, t in DATA["directory"][1]["links"] if t]
+
 
 def layer_box(key):
     for L in DATA["layers"]:
@@ -38,13 +51,22 @@ def layer_box(key):
     raise KeyError(key)
 
 
+def item_px(item_id):
+    """First layer of an item, in scene pixels: x, y, w, h."""
+    for L in DATA["layers"]:
+        if L["item"] == item_id:
+            x, y, w, h = L["box"]
+            return x / 100 * SW, y / 100 * SH, w / 100 * SW, h / 100 * SH
+    raise KeyError(item_id)
+
+
 def pct(v, total):
     return round(v / total * 100, 2)
 
 
 def screens_html():
     bx, by, bw, bh = layer_box("desk")["box"]
-    dx, dy, dw, dh = bx / 100 * 1086, by / 100 * 1448, bw / 100 * 1086, bh / 100 * 1448
+    dx, dy, dw, dh = bx / 100 * SW, by / 100 * SH, bw / 100 * SW, bh / 100 * SH
     out = []
     for i, (x, y, w, h) in enumerate(SCREENS):
         lines = "".join(
@@ -123,18 +145,30 @@ def stars_html():
     return "".join(out)
 
 
+MAP_ICON = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5l5.5-2.5 6 2.5 5.5-2.5v13.5l-5.5 2.5-6-2.5-5.5 2.5z '
+            'M9 4v13.5 M15 6.5V20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"></path></svg>')
+
+
 def header_html(href):
-    nav = "".join(f'<a href="{href(u)}">{E(t)}</a>' for t, u in DATA["nav"])
+    nav = "".join(f'<a class="tag" href="{href(u)}">{E(t)}</a>' for t, u in DATA["nav"])
     return (
-        '<header class="site-header wrap">'
-        f'<a class="brand" href="{href("/")}">{E(SITE["name"])}</a>'
-        f'<nav class="site-nav" aria-label="主导航">{nav}'
-        f'<button class="mode-toggle" type="button" data-mode-toggle aria-label="切换到夜晚">{SUN}{MOON}</button>'
-        "</nav></header>"
+        '<header class="site-header"><div class="branch" aria-hidden="true"></div><div class="hdr wrap">'
+        f'<a class="brand" href="{href("/")}" aria-label="{E(SITE["name"])} · 回到树屋"><span class="brand-board">{E(SITE["name"])}</span></a>'
+        f'<nav class="site-nav" aria-label="主导航">{nav}</nav>'
+        '<div class="hdr-tools">'
+        f'<button class="hdr-btn map-open" type="button" data-map-open aria-controls="th-map" aria-expanded="false">{MAP_ICON}<span>树屋地图</span></button>'
+        '<div class="sky-menu">'
+        f'<button class="hdr-btn sky-open mode-toggle" type="button" data-sky-open aria-expanded="false" aria-controls="sky-pop" aria-label="天色">{SUN}{MOON}</button>'
+        '<div class="sky-pop" id="sky-pop" role="group" aria-label="天色" hidden><p class="sky-pop-title">天色</p>'
+        '<button type="button" data-mode-set="auto" aria-pressed="true">跟随当地时间</button>'
+        '<button type="button" data-mode-set="day" aria-pressed="false">白天</button>'
+        '<button type="button" data-mode-set="night" aria-pressed="false">夜晚</button></div>'
+        "</div></div></div></header>"
     )
 
 
-def directory_html(href):
+def map_html(href):
+    """The treehouse map drawer (Base.astro)."""
     groups = []
     for g in DATA["directory"]:
         links = []
@@ -144,19 +178,109 @@ def directory_html(href):
                 links.append(f'<a href="{href(url)}" data-th-target="{target}">{E(label)}</a>')
             else:
                 links.append(f'<a href="{href("/archive")}">{E(label)}</a>')
-        groups.append(f'<div class="dir-group"><h3>{E(g["title"])}</h3><div class="dir-links">{"".join(links)}</div></div>')
-    return '<nav class="dir" aria-label="目录"><h2 class="side-label">目录</h2>' + "".join(groups) + "</nav>"
+        groups.append(f'<div class="th-map-group"><h3>{E(g["title"])}</h3><div class="th-map-links">{"".join(links)}</div></div>')
+    main = f'<a href="{href("/")}">回到树屋</a>' + "".join(f'<a href="{href(u)}">{E(t)}</a>' for t, u in DATA["nav"])
+    return (
+        '<div class="th-map" id="th-map" hidden><div class="th-map-backdrop" data-map-close></div>'
+        '<section class="th-map-sheet" role="dialog" aria-modal="true" aria-labelledby="th-map-title">'
+        f'<div class="th-map-head"><h2 id="th-map-title">树屋地图</h2><button class="th-map-close" type="button" data-map-close aria-label="关上地图">{CLOSE}</button></div>'
+        f'<nav class="th-map-main" aria-label="主要入口">{main}</nav>'
+        + "".join(groups)
+        + '<p class="th-map-foot"><a href="#">RSS 订阅</a></p>'
+        "</section></div>"
+    )
 
 
-def card_data_json(href):
+GROUND_SVG = (
+    '<div class="ground" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none">'
+    '<path class="g-far" d="M0 70 C120 40 220 52 330 62 C450 74 520 34 650 40 C790 47 860 74 990 64 C1110 55 1190 30 1300 42 C1370 50 1410 58 1440 56 V120 H0z"></path>'
+    '<path class="g-near" d="M0 92 C140 78 260 84 380 90 C520 97 640 80 780 82 C930 84 1040 98 1180 92 C1300 87 1380 80 1440 84 V120 H0z"></path>'
+    "</svg></div>"
+)
+
+FOOTER_HTML = (
+    f'<footer class="site-footer">{GROUND_SVG}<div class="ft wrap">'
+    '<nav class="ft-links" aria-label="页脚"><a href="#">回到树屋</a>'
+    '<button type="button" data-map-open aria-controls="th-map">树屋地图</button>'
+    f'<a href="#sec-about">关于{E(SITE["name"])}</a></nav>'
+    f'<p class="ft-credit">© 2026 {E(SITE["name"])} · 英文字体 testType 01，设计：Xiaoyuan Gao / '
+    '<a href="https://www.notyourtype.nl" rel="noopener">notyourtypefoundry</a></p>'
+    "</div></footer>"
+)
+
+FLOOR_TEXT = {
+    "canopy": ("树冠", "望远镜和小红旗：实验室、年度目标", "/lab", "实验室"),
+    "living": ("楼上 · 起居室", "生活：读书、音乐、弹琴、旅行、随笔", "/life", "生活"),
+    "workshop": ("楼下 · 工作坊", "技术：技术栈、技术文章、踩坑、复盘", "/tech", "技术"),
+    "ground": ("树下", "木牌和信箱：关于我、留言板", "/about", "关于"),
+}
+
+
+def floors_html(href):
+    out = []
+    for f in DATA["floors"]:
+        title, sub, url, go = FLOOR_TEXT[f["id"]]
+        y = (f["box"][1] + f["box"][3]) / 2 / DATA["scene"]["h"] * 100
+        out.append(
+            f'<li style="--y:{y:.1f}%"><button type="button" class="hf-floor" data-th-floor="{f["id"]}">'
+            f'<b>{E(title)}</b><span>{E(sub)}</span></button><a class="hf-go" href="{href(url)}">{E(go)} →</a></li>'
+        )
+    return '<nav class="home-floors" aria-label="树屋的四层"><ol>' + "".join(out) + "</ol></nav>"
+
+
+PANEL_HTML = f"""<section class="th-panel" id="th-panel" aria-labelledby="th-panel-title" hidden>
+<div class="th-panel-nav">
+<button class="th-panel-step" type="button" data-step="-1"></button>
+<button class="th-panel-step" type="button" data-step="1"></button>
+<button class="th-panel-close" type="button" aria-label="关闭，回到全景">{CLOSE}</button>
+</div>
+<p class="th-panel-kicker"></p>
+<h2 class="th-panel-title" id="th-panel-title" tabindex="-1"></h2>
+<p class="th-panel-desc"></p>
+<div class="th-panel-body"></div>
+<a class="th-panel-more" href="#" hidden></a>
+</section>"""
+
+
+def map_hrefs(obj, href):
+    """Rewrite every "href" value in a nested structure (used to point preview links at in-page views)."""
+    if isinstance(obj, dict):
+        return {k: (href(v) if k == "href" and isinstance(v, str) else map_hrefs(v, href)) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [map_hrefs(v, href) for v in obj]
+    return obj
+
+
+def load_content():
+    return build_panels(DATA["items"], SITE)
+
+
+def card_data_json(href, panels, posts):
     items = [dict(it, href=href(it["href"]) if it.get("href") else None) for it in DATA["items"]]
-    data = dict(scene=DATA["scene"], items=items, floors=DATA["floors"])
+    data = dict(
+        scene=DATA["scene"], items=items, floors=DATA["floors"],
+        panels=map_hrefs(panels, href), posts=map_hrefs(search_index(posts), href),
+    )
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
-def home_html(img_base, href):
+def welcome_html():
+    w = SITE["welcome"]
+    cut = w.find("，")
+    lines = [w[:cut + 1], w[cut + 1:]] if cut > 0 else [w]
+    return "".join(f"<span>{E(t)}</span>" for t in lines)
+
+
+def home_html(img_base, href, panels, posts):
     return f"""{header_html(href)}
-<main class="home wrap">
+<main class="home">
+<div class="home-intro">
+<p class="hi-kicker">TREEHOUSE · 个人博客</p>
+<h1>{welcome_html()}</h1>
+<p class="lede">{E(SITE["tagline"])}</p>
+<p class="hi-hint"><span class="hint-hover">点一下树屋里的东西，镜头会推过去。</span><span class="hint-touch">点一点树屋里的东西。</span></p>
+<button class="hi-map" type="button" data-map-open aria-controls="th-map">打开树屋地图</button>
+</div>
 <section class="scene-col" aria-label="树屋">
 <div class="th-scene" id="th-scene">
 <div class="th-stage">
@@ -176,22 +300,101 @@ def home_html(img_base, href):
 <a class="th-card-go" href="#">去看看</a>
 </div>
 </div>
-<p class="scene-hint"><span class="hint-hover">把鼠标移到树屋里的东西上，点一下就能打开。</span><span class="hint-touch">点一点树屋里的东西。</span></p>
 </section>
+{floors_html(href)}
 <aside class="side">
-<div class="intro">
-<h1>{E(SITE["welcome"])}</h1>
-<p class="lede">{E(SITE["tagline"])}</p>
-</div>
-<div class="sky-ctl">
-<h2 class="side-label" id="sky-label">天色</h2>
-<div class="seg" role="group" aria-labelledby="sky-label">
-<button type="button" data-mode-set="auto" aria-pressed="true">跟随当地时间</button>
-<button type="button" data-mode-set="day" aria-pressed="false">白天</button>
-<button type="button" data-mode-set="night" aria-pressed="false">夜晚</button>
-</div>
-</div>
-{directory_html(href)}
+{PANEL_HTML}
 </aside>
 </main>
-<script type="application/json" id="th-data">{card_data_json(href)}</script>"""
+{map_html(href)}
+<script type="application/json" id="th-data">{card_data_json(href, panels, posts)}</script>"""
+
+
+# ---------- Article and section pages (the preview shows them in-page) ----------
+
+def banner_style(item_id, img_base, cw=620, ch=190):
+    """A strip of the drawing centred on an object, used as the header of its pages."""
+    x, y, w, h = item_px(item_id)
+    cx, cy = x + w / 2, y + h / 2
+    x0 = min(max(0, cx - cw / 2), SW - cw)
+    y0 = min(max(0, cy - ch / 2), SH - ch)
+    return (f"--img-day:url({img_base}day.webp);--img-night:url({img_base}night.webp);"
+            f"background-size:{SW / cw * 100:.2f}% auto;"
+            f"background-position:{x0 / (SW - cw) * 100:.2f}% {y0 / (SH - ch) * 100:.2f}%")
+
+
+def crumbs_html(href, item_id=None, extra=None):
+    parts = [f'<a href="{href("/")}">树屋</a>']
+    if item_id:
+        it = ITEMS[item_id]
+        group = GROUP_OF.get(item_id, "")
+        if group:
+            parts.append(f"<span>{E(group)}</span>")
+        parts.append(f'<a href="{href("/#" + item_id)}">{E(it["name"])}</a>')
+    if extra:
+        parts.append(f"<span>{E(extra)}</span>")
+    return '<nav class="crumbs" aria-label="位置">' + '<span aria-hidden="true">›</span>'.join(parts) + "</nav>"
+
+
+def post_list_html(posts, href):
+    if not posts:
+        return '<p class="page-empty">这里还没有文章。</p>'
+    rows = []
+    for p in posts:
+        tags = " · ".join(p["tags"])
+        rows.append(
+            f'<li><a href="{href(p["href"])}"><span class="pl-title">{E(p["title"])}</span>'
+            f'<span class="pl-sum">{E(p["summary"])}</span>'
+            f'<span class="pl-meta">{p["dateLabel"]} · {p["minutes"]} 分钟{" · " + E(tags) if tags else ""}</span></a></li>'
+        )
+    return '<ul class="page-list">' + "".join(rows) + "</ul>"
+
+
+def back_html(item_id, href):
+    it = ITEMS[item_id]
+    return f'<a class="page-back" href="{href("/#" + item_id)}">‹ 回到树屋 · {E(it["name"])}</a>'
+
+
+def page_views_html(img_base, href, panels, posts):
+    pages = []
+    for p in posts:
+        item = p["item"]
+        tags = " · ".join(p["tags"])
+        banner = (f'<div class="page-banner" style="{banner_style(item, img_base)}" role="img" '
+                  f'aria-label="树屋里的{E(ITEMS[item]["name"])}"></div>') if item in ITEMS else ""
+        sample = '<p class="page-sample">示例文章，正式写作时替换或删除。</p>' if p["sample"] else ""
+        pages.append(
+            f'<div class="page" data-page="post-{p["slug"]}" data-title="{E(p["title"])}" hidden>'
+            f'{crumbs_html(href, item)}{banner}'
+            f'<article class="post"><p class="post-meta">{p["dateLabel"]} · {p["minutes"]} 分钟'
+            f'{" · " + E(tags) if tags else ""}</p><h1 tabindex="-1">{E(p["title"])}</h1>'
+            f'{sample}<div class="post-body">{p["html"]}</div></article>'
+            f'{back_html(item, href) if item in ITEMS else ""}</div>'
+        )
+
+    # One page per object section, plus 技术 / 生活 / 归档.
+    for it in DATA["items"]:
+        if not it.get("href"):
+            continue
+        panel = panels.get(it["id"])
+        mine = [p for p in posts if p["item"] == it["id"]]
+        if panel and panel["kind"] == "posts":
+            body = post_list_html(mine, href)
+        else:
+            body = (f'<p class="page-empty">{E(it["desc"])}</p>'
+                    f'<p class="page-empty">正式网站里，这里是「{E(it["section"])}」的完整页面，还在搭建。</p>')
+        pages.append(
+            f'<div class="page" data-page="sec-{it["id"]}" data-title="{E(it["section"])}" hidden>'
+            f'{crumbs_html(href, it["id"])}'
+            f'<div class="page-banner" style="{banner_style(it["id"], img_base)}" role="img" aria-label="树屋里的{E(it["name"])}"></div>'
+            f'<h1 class="page-title" tabindex="-1">{E(it["section"])}</h1>{body}{back_html(it["id"], href)}</div>'
+        )
+
+    for key, title, ids in (("tech", "技术", TECH), ("life", "生活", LIFE), ("archive", "归档", None)):
+        chosen = [p for p in posts if ids is None or p["item"] in ids]
+        pages.append(
+            f'<div class="page" data-page="sec-{key}" data-title="{title}" hidden>'
+            f'{crumbs_html(href, None, title)}<h1 class="page-title" tabindex="-1">{title}</h1>'
+            f'{post_list_html(chosen, href)}<a class="page-back" href="{href("/")}">‹ 回到树屋</a></div>'
+        )
+    return '<main class="page-view wrap" id="page-view" hidden>' + "".join(pages) + "</main>"

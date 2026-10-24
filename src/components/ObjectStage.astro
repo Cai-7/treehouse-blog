@@ -1,0 +1,26 @@
+---
+// The object drawn at full size on its own page, by the same code as its panel on the home page.
+// What is inside the box shows until the script takes over (and stays if scripts are off).
+import '../styles/treehouse.css';
+import { pageData } from '../lib/content';
+
+interface Props {
+  ids: string[];
+  wide?: boolean;
+}
+
+const { ids, wide = false } = Astro.props;
+const json = await pageData(ids);
+---
+
+{
+  ids.map((id) => (
+    <div class={wide ? 'page-object is-wide' : 'page-object'} data-th-render={id}>
+      <slot />
+    </div>
+  ))
+}
+<script is:inline type="application/json" id="th-data" set:html={json}></script>
+<script>
+  import '../scripts/treehouse.js';
+</script>

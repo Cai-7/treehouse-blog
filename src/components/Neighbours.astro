@@ -1,0 +1,33 @@
+---
+// Bottom of a section page: the objects on either side in the same part of the treehouse.
+import { ITEMS, neighboursOf, cutOf } from '../lib/scene';
+
+interface Props {
+  item?: string;
+}
+
+const { item } = Astro.props;
+const it = item ? ITEMS[item] : undefined;
+const { prev, next } = item ? neighboursOf(item) : { prev: null, next: null };
+const thumb = (id: string) => cutOf(id)?.day;
+---
+
+<nav class="nb" aria-label="隔壁">
+  {
+    prev && (
+      <a class="nb-link is-prev" href={prev.href!}>
+        {thumb(prev.id) && <img src={thumb(prev.id)} alt="" decoding="async" loading="lazy" />}
+        <span><small>‹ 隔壁</small>{prev.section}</span>
+      </a>
+    )
+  }
+  <a class="nb-home" href={it ? `/#${it.id}` : '/'}>{it ? `回到树屋 · ${it.name}` : '回到树屋'}</a>
+  {
+    next && (
+      <a class="nb-link is-next" href={next.href!}>
+        <span><small>隔壁 ›</small>{next.section}</span>
+        {thumb(next.id) && <img src={thumb(next.id)} alt="" decoding="async" loading="lazy" />}
+      </a>
+    )
+  }
+</nav>

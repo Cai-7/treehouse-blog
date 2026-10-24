@@ -1,0 +1,43 @@
+---
+// Top of every section page: a window onto the drawing with the camera pushed in on the object
+// (or the whole floor), the title written on the left. Pages with no place in the tree get plain paper.
+import { ITEMS, GROUP_OF, sceneWindow } from '../lib/scene';
+
+interface Props {
+  item?: string;
+  label?: string; // crumb and kicker when there is no object
+  title: string;
+  desc?: string;
+  stats?: string;
+  floor?: 'workshop' | 'living' | 'canopy' | 'ground';
+}
+
+const { item, label, title, desc, stats, floor } = Astro.props;
+const it = item ? ITEMS[item] : undefined;
+const group = it ? GROUP_OF[it.id] : undefined;
+const win = it ? sceneWindow({ item: it.id }) : floor ? sceneWindow({ floor }) : null;
+---
+
+<nav class="crumbs" aria-label="位置">
+  <a href="/">树屋</a>
+  {group && (<Fragment><span aria-hidden="true">›</span><span>{group}</span></Fragment>)}
+  {it && (<Fragment><span aria-hidden="true">›</span><span aria-current="page">{it.name}</span></Fragment>)}
+  {!it && label && (<Fragment><span aria-hidden="true">›</span><span aria-current="page">{label}</span></Fragment>)}
+</nav>
+
+<header class={win ? `sh has-window${win.flip ? ' is-flip' : ''}` : 'sh no-window'} style={win?.style}>
+  {
+    win && (
+      <a class="sh-window" href={it ? `/#${it.id}` : '/'} aria-label={it ? `在树屋里看${it.name}` : '回到树屋'}>
+        <span class="sh-look">{it ? `在树屋里看${it.name} ↗` : '回到树屋 ↗'}</span>
+      </a>
+    )
+  }
+  <div class="sh-text">
+    <p class="sh-kicker">{it ? `${it.name}${group ? ' · ' + group.split(' · ')[0] : ''}` : label}</p>
+    <h1 class="page-title sh-title">{title}</h1>
+    {desc && <p class="sh-desc">{desc}</p>}
+    {stats && <p class="sh-stats">{stats}</p>}
+    <slot />
+  </div>
+</header>

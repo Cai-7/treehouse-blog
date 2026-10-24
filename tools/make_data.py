@@ -45,10 +45,10 @@ ITEMS = [
     dict(id="chime", layers=["chime"], name="风铃", group="", section="订阅",
          desc="订阅更新。点一下，听听风铃。", href="/subscribe", scale=1.12, origin="50% 0%", extra="chime",
          hit=(858, 450, 918, 570)),
-    dict(id="desk", layers=["desk"], name="双屏书桌", group="技术", section="前端",
-         desc="屏幕上滚动的，是最新一篇前端文章的代码。", href="/tech/frontend", scale=1.05, origin="50% 100%", extra="desk"),
-    dict(id="board", layers=["board"], name="黑板", group="技术", section="机器学习",
-         desc="公式推导和模型笔记都写在这里。", href="/tech/ml", scale=1.08, origin="50% 50%"),
+    dict(id="desk", layers=["desk"], name="双屏书桌", group="技术", section="技术栈",
+         desc="两块屏幕，左边是前端，右边是机器学习：我会的技术都在上面。", href="/tech/stack", scale=1.05, origin="50% 100%", extra="desk"),
+    dict(id="board", layers=["board"], name="黑板", group="技术", section="技术文章",
+         desc="前端和机器学习的文章，都用粉笔写在这块黑板上。", href="/tech/posts", scale=1.08, origin="50% 50%"),
     dict(id="pegboard", layers=["pegboard"], name="工具墙", group="技术", section="工具与踩坑",
          desc="折腾工具、排查问题的记录，挂满一整面墙。", href="/tech/tools", scale=1.07, origin="50% 50%"),
     dict(id="blueprint", layers=["blueprint"], name="图纸桶", group="技术", section="Now",
@@ -81,7 +81,7 @@ FLOORS = [
 ]
 
 DIRECTORY = [
-    dict(title="技术 · 楼下工作坊", links=[["前端", "desk"], ["机器学习", "board"], ["工具与踩坑", "pegboard"], ["项目复盘", "cabinet"], ["Now", "blueprint"]]),
+    dict(title="技术 · 楼下工作坊", links=[["技术栈", "desk"], ["技术文章", "board"], ["工具与踩坑", "pegboard"], ["项目复盘", "cabinet"], ["Now", "blueprint"]]),
     dict(title="生活 · 楼上起居室", links=[["读书", "books"], ["音乐", "record"], ["弹琴", "piano"], ["摄影", "photos"], ["旅行", "suitcase"], ["随笔", "hammock"], ["影视与游戏", "screen"], ["日常", "plants"]]),
     dict(title="树上的其他角落", links=[["实验室", "telescope"], ["年度目标", "flag"], ["友链", "birdhouse"], ["留言板", "mailbox"], ["搜索", "owl"], ["订阅", "chime"], ["关于", "sign"], ["归档", None]]),
 ]

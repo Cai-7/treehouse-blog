@@ -1,0 +1,11 @@
+# 晾衣绳上的照片。正式使用时把 src 换成你自己的照片路径（放在 public/photos/ 下）。
+# 示例里用 crop 从树屋插画上裁了几块当照片：[x, y, 宽, 高]，单位是插画像素。
+# date、place、camera 都可以不填，点开照片翻到背面会看到。
+sample: true
+items:
+  - { caption: 树冠上的小红旗, crop: [540, 10, 210, 210], date: 2026-10-02, place: 树屋顶层, camera: 手机 }
+  - { caption: 窗台盆栽, crop: [180, 430, 130, 130], date: 2026-09-18, place: 二楼窗边 }
+  - { caption: 吊床, crop: [780, 440, 240, 240], date: 2026-08-30, place: 阳台, camera: 胶片相机 }
+  - { caption: 夜里的灯串, crop: [375, 650, 300, 300], night: true, date: 2026-10-10, place: 一楼工作坊 }
+  - { caption: 钢琴, crop: [290, 500, 190, 190], date: 2026-09-05, place: 起居室 }
+  - { caption: 树下的信箱, crop: [560, 1180, 140, 140], date: 2026-07-21, place: 树根旁, camera: 手机 }

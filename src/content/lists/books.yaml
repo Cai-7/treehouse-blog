@@ -1,0 +1,14 @@
+# 树洞书架：读过的书。每本是书架上的一本书，点开就是读书笔记。
+#   rating 1–5；color 是书脊颜色，不填会自动配色
+#   note 读后感（一两句）；quote 摘一句话；finished 读完的日期（都可以不填）
+#   status 写 reading（在读）、done（读完）或 want（想读）；不填时有 finished 就算读完，否则算在读
+sample: true
+items:
+  - { title: 设计心理学, author: 唐纳德·诺曼, rating: 5, color: "#c8553d", finished: 2026-09-20, note: 门为什么总是推拉搞反？因为设计的人没站在用的人那边。做界面的人都该读。, quote: 好的设计是看不见的。 }
+  - { title: 深度学习, author: Goodfellow 等, rating: 4, color: "#3f6e8c", finished: 2026-08-02, note: 公式很多，适合当字典，不适合一口气读。第六章反向传播反复看了三遍。 }
+  - { title: 三体, author: 刘慈欣, rating: 5, color: "#2f4858", finished: 2026-06-18, note: 读到黑暗森林那一段，合上书在阳台坐了很久。 }
+  - { title: 小王子, author: 圣埃克苏佩里, rating: 5, color: "#e0a33a", finished: 2026-05-01, note: 每隔几年读一次，每次停下来的地方都不一样。, quote: 真正重要的东西，用眼睛是看不见的。 }
+  - { title: 禅与摩托车维修艺术, author: 罗伯特·M·波西格, rating: 4, color: "#6b8e4e", finished: 2026-03-11, note: 拧螺丝和写代码是同一种专注。 }
+  - { title: 人类简史, author: 尤瓦尔·赫拉利, rating: 4, color: "#8a5a83", finished: 2026-01-26, note: 故事讲得漂亮，结论要打折听。 }
+  - { title: 统计学习方法, author: 李航, color: "#4f7f78", status: reading, note: 每天一小节，配着代码一起看。 }
+  - { title: 百年孤独, author: 加西亚·马尔克斯, color: "#b8501f", status: want }

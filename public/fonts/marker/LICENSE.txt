@@ -1,0 +1,7 @@
+TH Marker is a subset of LXGW Marker Gothic（霞鹜漫黑）, made for this website.
+
+Copyright 2021-2026 The LXGW Marker Gothic Project Authors (https://github.com/lxgw/LxgwMarkerGothic)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org
+
+https://openfontlicense.org

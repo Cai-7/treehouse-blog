@@ -1,0 +1,5 @@
+# 鸟屋 · 友链。
+sample: true
+items:
+  - { name: 示例朋友 A, url: "https://example.com", desc: 一句话介绍这位朋友的博客 }
+  - { name: 示例朋友 B, url: "https://example.org", desc: 交换友链后写在这里 }

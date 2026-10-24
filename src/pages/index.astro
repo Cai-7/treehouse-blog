@@ -1,58 +1,80 @@
 ---
+// Home: the treehouse in the middle of the sky. The welcome sits on the left, the floors are signed on
+// the right at the height of each floor; an object's panel slides in on the right and the tree steps aside.
+// Markup must stay in step with tools/render.py (the no-Node preview).
 import Base from '../layouts/Base.astro';
 import Treehouse from '../components/Treehouse.astro';
 import site from '../data/site.json';
 import data from '../data/treehouse.json';
+import { SH } from '../lib/scene';
 
-const hrefs = data.hrefs as Record<string, string | null>;
+// "你好，我是蔡煦嘉" → two lines at the comma, never breaking inside the name
+const cut = site.welcome.indexOf('，');
+const welcomeLines = cut > 0 ? [site.welcome.slice(0, cut + 1), site.welcome.slice(cut + 1)] : [site.welcome];
+
+const FLOOR_TEXT: Record<string, { title: string; sub: string; href: string; go: string }> = {
+  canopy: { title: '树冠', sub: '望远镜和小红旗：实验室、年度目标', href: '/lab', go: '实验室' },
+  living: { title: '楼上 · 起居室', sub: '生活：读书、音乐、弹琴、旅行、随笔', href: '/life', go: '生活' },
+  workshop: { title: '楼下 · 工作坊', sub: '技术：技术栈、技术文章、踩坑、复盘', href: '/tech', go: '技术' },
+  ground: { title: '树下', sub: '木牌和信箱：关于我、留言板', href: '/about', go: '关于' },
+};
+const floors = (data.floors as { id: string; box: number[] }[]).map((f) => ({
+  id: f.id,
+  y: (((f.box[1] + f.box[3]) / 2 / SH) * 100).toFixed(1),
+  ...FLOOR_TEXT[f.id],
+}));
 ---
 
-<Base>
-  <main class="home wrap">
-    <section class="scene-col" aria-label="树屋">
-      <Treehouse />
-      <p class="scene-hint">
-        <span class="hint-hover">把鼠标移到树屋里的东西上，点一下就能打开。</span>
+<Base home>
+  <main class="home">
+    <div class="home-intro">
+      <p class="hi-kicker">TREEHOUSE · 个人博客</p>
+      <h1>{welcomeLines.map((t) => <span>{t}</span>)}</h1>
+      <p class="lede">{site.tagline}</p>
+      <p class="hi-hint">
+        <span class="hint-hover">点一下树屋里的东西，镜头会推过去。</span>
         <span class="hint-touch">点一点树屋里的东西。</span>
       </p>
+      <button class="hi-map" type="button" data-map-open aria-controls="th-map">打开树屋地图</button>
+    </div>
+
+    <section class="scene-col" aria-label="树屋">
+      <Treehouse />
     </section>
 
-    <aside class="side">
-      <div class="intro">
-        <h1>{site.welcome}</h1>
-        <p class="lede">{site.tagline}</p>
-      </div>
-
-      <div class="sky-ctl">
-        <h2 class="side-label" id="sky-label">天色</h2>
-        <div class="seg" role="group" aria-labelledby="sky-label">
-          <button type="button" data-mode-set="auto" aria-pressed="true">跟随当地时间</button>
-          <button type="button" data-mode-set="day" aria-pressed="false">白天</button>
-          <button type="button" data-mode-set="night" aria-pressed="false">夜晚</button>
-        </div>
-      </div>
-
-      <nav class="dir" aria-label="目录">
-        <h2 class="side-label">目录</h2>
+    <nav class="home-floors" aria-label="树屋的四层">
+      <ol>
         {
-          data.directory.map((group) => (
-            <div class="dir-group">
-              <h3>{group.title}</h3>
-              <div class="dir-links">
-                {group.links.map(([label, target]) =>
-                  target ? (
-                    <a href={hrefs[target] ?? '/'} data-th-target={target}>
-                      {label}
-                    </a>
-                  ) : (
-                    <a href="/archive">{label}</a>
-                  ),
-                )}
-              </div>
-            </div>
+          floors.map((f) => (
+            <li style={`--y:${f.y}%`}>
+              <button type="button" class="hf-floor" data-th-floor={f.id}>
+                <b>{f.title}</b>
+                <span>{f.sub}</span>
+              </button>
+              <a class="hf-go" href={f.href}>{f.go} →</a>
+            </li>
           ))
         }
-      </nav>
+      </ol>
+    </nav>
+
+    <aside class="side">
+      <section class="th-panel" id="th-panel" aria-labelledby="th-panel-title" hidden>
+        <div class="th-panel-nav">
+          <button class="th-panel-step" type="button" data-step="-1"></button>
+          <button class="th-panel-step" type="button" data-step="1"></button>
+          <button class="th-panel-close" type="button" aria-label="关闭，回到全景">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="th-panel-kicker"></p>
+        <h2 class="th-panel-title" id="th-panel-title" tabindex="-1"></h2>
+        <p class="th-panel-desc"></p>
+        <div class="th-panel-body"></div>
+        <a class="th-panel-more" href="#" hidden></a>
+      </section>
     </aside>
   </main>
 </Base>

@@ -142,19 +142,19 @@
   {
    "id": "desk",
    "name": "双屏书桌",
-   "section": "前端",
-   "kicker": "技术 · 前端",
-   "desc": "屏幕上滚动的，是最新一篇前端文章的代码。",
-   "href": "/tech/frontend",
+   "section": "技术栈",
+   "kicker": "技术 · 技术栈",
+   "desc": "两块屏幕，左边是前端，右边是机器学习：我会的技术都在上面。",
+   "href": "/tech/stack",
    "extra": "desk"
   },
   {
    "id": "board",
    "name": "黑板",
-   "section": "机器学习",
-   "kicker": "技术 · 机器学习",
-   "desc": "公式推导和模型笔记都写在这里。",
-   "href": "/tech/ml",
+   "section": "技术文章",
+   "kicker": "技术 · 技术文章",
+   "desc": "前端和机器学习的文章，都用粉笔写在这块黑板上。",
+   "href": "/tech/posts",
    "extra": null
   },
   {
@@ -525,7 +525,7 @@
    "key": "desk",
    "item": "desk",
    "name": "双屏书桌",
-   "label": "双屏书桌：前端",
+   "label": "双屏书桌：技术栈",
    "box": [
     22.376,
     63.398,
@@ -543,7 +543,7 @@
    "key": "board",
    "item": "board",
    "name": "黑板",
-   "label": "黑板：机器学习",
+   "label": "黑板：技术文章",
    "box": [
     41.16,
     58.633,
@@ -1125,11 +1125,11 @@
    "title": "技术 · 楼下工作坊",
    "links": [
     [
-     "前端",
+     "技术栈",
      "desk"
     ],
     [
-     "机器学习",
+     "技术文章",
      "board"
     ],
     [
@@ -1259,8 +1259,8 @@
   "suitcase": "/life/travel",
   "hammock": "/life/notes",
   "chime": "/subscribe",
-  "desk": "/tech/frontend",
-  "board": "/tech/ml",
+  "desk": "/tech/stack",
+  "board": "/tech/posts",
   "pegboard": "/tech/tools",
   "blueprint": "/now",
   "cabinet": "/tech/projects",

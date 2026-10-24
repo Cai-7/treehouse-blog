@@ -1,0 +1,65 @@
+---
+// The archive as a tree stump: the first year is the core, each later year one more ring, as thick
+// as that year was busy. Every article is a little knot on its year's ring, placed by the day it
+// was written (January at the top, going clockwise). Rings link to their year below.
+import type { Post } from '../lib/content';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const byYear = new Map<number, Post[]>();
+for (const p of posts) {
+  const y = p.date.getUTCFullYear();
+  byYear.set(y, [...(byYear.get(y) ?? []), p]);
+}
+const years = [...byYear.keys()].sort((a, b) => a - b);
+const most = Math.max(1, ...[...byYear.values()].map((l) => l.length));
+let r = 22;
+const rings = years.map((y) => {
+  const list = byYear.get(y)!;
+  const inner = r;
+  r += 26 + (list.length / most) * 34;
+  return { y, list, inner, outer: r };
+});
+const R = r + 10;
+const COLORS = ['#ead2a0', '#dcb984', '#e6c793', '#d3ad74'];
+const dayOfYear = (d: Date) => (Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400000;
+const knots = rings.flatMap((g) =>
+  g.list.map((p, i) => {
+    const a = (dayOfYear(p.date) / 366) * Math.PI * 2 - Math.PI / 2;
+    const rr = g.inner + (g.outer - g.inner) * (0.35 + 0.3 * ((i % 3) / 2));
+    return { p, x: Math.cos(a) * rr, y: Math.sin(a) * rr };
+  }),
+);
+const f = (n: number) => n.toFixed(1);
+---
+
+{
+  rings.length > 0 && (
+    <figure class="rg">
+      <svg viewBox={`${-R} ${-R} ${R * 2} ${R * 2}`} role="img" aria-label={`年轮：${rings.map((g) => `${g.y} 年 ${g.list.length} 篇`).join('，')}`}>
+        <circle r={R - 3} class="rg-bark" />
+        {[...rings].reverse().map((g, i) => (
+          <a href={`#y${g.y}`} class="rg-ring" aria-label={`${g.y} 年，${g.list.length} 篇`}>
+            <circle r={g.outer} style={`fill:${COLORS[(rings.length - 1 - i) % COLORS.length]}`} />
+            {[0.33, 0.66].map((k) => <circle r={f(g.inner + (g.outer - g.inner) * k)} class="rg-grain" />)}
+            <text y={f(-(g.inner + g.outer) / 2 + 4)} text-anchor="middle">{g.y}</text>
+          </a>
+        ))}
+        <circle r={rings[0].inner} class="rg-core" />
+        {knots.map((k) => (
+          <a href={k.p.href} class="rg-knot">
+            <title>{`${k.p.dateLabel}：${k.p.title}`}</title>
+            <circle cx={f(k.x)} cy={f(k.y)} r="4.5" />
+          </a>
+        ))}
+      </svg>
+      <figcaption>
+        {rings.map((g) => <a href={`#y${g.y}`}>{g.y} 年 · {g.list.length} 篇</a>)}
+        <span>每个小疙瘩是一篇文章，按写的日子绕一圈（一月在最上面）。</span>
+      </figcaption>
+    </figure>
+  )
+}

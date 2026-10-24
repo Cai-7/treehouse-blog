@@ -1,0 +1,8 @@
+# Netlify 构建设置。连接 GitHub 仓库自动部署时按这里构建；手动拖 dist 文件夹上传时用不到它。
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Astro 5 需要 Node 18.20 以上，固定用 20，避免 Netlify 默认版本变化导致构建失败
+  NODE_VERSION = "20"

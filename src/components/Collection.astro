@@ -1,0 +1,378 @@
+---
+// The plain, readable list under an object drawn at full size: everything the object holds,
+// as text that reads well, prints, works without scripts and can be found by search engines.
+import { loadList, loadPosts, tagCounts, tagHref, LIST_FILE } from '../lib/content';
+import { SW, SH } from '../lib/scene';
+import site from '../data/site.json';
+
+interface Props {
+  item: string;
+  kind: string;
+}
+
+const { item, kind } = Astro.props;
+const d: Record<string, any> = LIST_FILE[kind] ? await loadList(LIST_FILE[kind]) : {};
+const items: any[] = Array.isArray(d.items) ? d.items : [];
+const posts = await loadPosts();
+const bySlug = Object.fromEntries(posts.map((p) => [p.slug, p]));
+
+const LEVELS = ['', '入门', '会用', '熟练', '精通'];
+const stars = (n: number) => '★'.repeat(Math.max(0, Math.min(5, n || 0))) + '☆'.repeat(Math.max(0, 5 - (n || 0)));
+const fmt = (v: unknown) => {
+  if (v instanceof Date) return `${v.getUTCFullYear()} 年 ${v.getUTCMonth() + 1} 月 ${v.getUTCDate()} 日`;
+  return v == null ? '' : String(v);
+};
+const year = (v: unknown) => (v instanceof Date ? v.getUTCFullYear() : String(v ?? '').slice(0, 4));
+
+// books: 在读 / 读完 / 想读 (status may be left out: a finished date means 读完)
+const SHELVES: [string, string][] = [['reading', '在读'], ['done', '读完'], ['want', '想读']];
+const shelfOf = (b: any) => b.status || (b.finished ? 'done' : 'reading');
+
+// photos: a crop of the drawing (sample) or a real file
+const cropBg = (c: number[], night?: boolean) => {
+  const [x, y, w, h] = c;
+  return `background-image:url(/treehouse/${night ? 'night' : 'day'}.webp);background-size:${((SW / w) * 100).toFixed(2)}% auto;background-position:${((x / (SW - w)) * 100).toFixed(2)}% ${((y / (SH - h)) * 100).toFixed(2)}%`;
+};
+
+const screenKinds = [...new Set(items.map((x) => x.kind || '其他'))];
+const practiceMinutes = kind === 'piano' ? items.reduce((s, x) => s + (Number(x.minutes) || 0), 0) : 0;
+const allTags = kind === 'search' ? tagCounts(posts) : [];
+const rss = site.url.replace(/\/$/, '') + '/rss.xml';
+---
+
+<section class="cl" aria-label="清单">
+  {
+    kind === 'stack' && (
+      <div class="cl-cols">
+        {(d.screens ?? []).map((sc: any) => (
+          <div>
+            <h2 class="page-h2">{sc.title}</h2>
+            <ul class="cl-list">
+              {(sc.items ?? []).map((s: any) => (
+                <li class="cl-row">
+                  <div class="cl-head">
+                    <b>{s.name}</b>
+                    <span class="cl-meter" aria-label={`熟练度：${LEVELS[s.level] ?? ''}`}>
+                      {[1, 2, 3, 4].map((q) => <i class={q <= s.level ? 'is-on' : ''} />)}
+                      <small>{LEVELS[s.level] ?? ''}</small>
+                    </span>
+                  </div>
+                  {s.note && <p>{s.note}</p>}
+                  <p class="cl-meta">
+                    {s.since && <span>{s.since} 年开始用</span>}
+                    {(s.used ?? []).length > 0 && <span>用在：{[].concat(s.used).join('、')}</span>}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    kind === 'books' &&
+      SHELVES.map(([key, label]) => {
+        const list = items.filter((b) => shelfOf(b) === key);
+        return list.length ? (
+          <div>
+            <h2 class="page-h2">{label} <small>{list.length}</small></h2>
+            <ul class="cl-list">
+              {list.map((b) => (
+                <li class="cl-row cl-book" style={b.color ? `--c:${b.color}` : undefined}>
+                  <div class="cl-head">
+                    <b>《{b.title}》</b>
+                    {b.rating && <span class="cl-stars" aria-label={`${b.rating} 星`}>{stars(b.rating)}</span>}
+                  </div>
+                  <p class="cl-meta">
+                    {b.author && <span>{b.author}</span>}
+                    {b.finishedLabel && <span>{year(b.finished)} 年 {b.finishedLabel}读完</span>}
+                  </p>
+                  {b.note && <p>{b.note}</p>}
+                  {b.quote && <blockquote>{b.quote}</blockquote>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null;
+      })
+  }
+
+  {
+    kind === 'music' && (
+      <ol class="cl-list cl-tracks">
+        {items.map((m) => (
+          <li class="cl-row">
+            <div class="cl-head">
+              <b>{m.title}</b>
+              <span class="cl-meta">{m.artist}</span>
+            </div>
+            {m.note && <p>{m.note}</p>}
+            {m.url && <a class="cl-go" href={m.url} rel="noopener" target="_blank">去听原曲 ↗</a>}
+          </li>
+        ))}
+      </ol>
+    )
+  }
+
+  {
+    kind === 'photos' && (
+      <ul class="cl-photos">
+        {items.map((ph) => (
+          <li>
+            <figure>
+              {ph.src ? (
+                <img src={ph.src} alt={ph.caption ?? ''} loading="lazy" decoding="async" />
+              ) : ph.crop ? (
+                <div class="cl-crop" style={cropBg(ph.crop, ph.night)} role="img" aria-label={ph.caption ?? ''} />
+              ) : null}
+              <figcaption>
+                <b>{ph.caption}</b>
+                <span>{[ph.dateLabel, ph.place, ph.camera].filter(Boolean).join(' · ')}</span>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    kind === 'screen' &&
+      screenKinds.map((k) => (
+        <div>
+          <h2 class="page-h2">{k}</h2>
+          <ul class="cl-list">
+            {items
+              .filter((x) => (x.kind || '其他') === k)
+              .map((x) => (
+                <li class="cl-row">
+                  <div class="cl-head">
+                    <b>{x.title}</b>
+                    {x.rating && <span class="cl-stars" aria-label={`${x.rating} 星`}>{stars(x.rating)}</span>}
+                  </div>
+                  {x.note && <p>{x.note}</p>}
+                </li>
+              ))}
+          </ul>
+        </div>
+      ))
+  }
+
+  {
+    kind === 'places' && (
+      <Fragment>
+        <h2 class="page-h2">去过 <small>{(d.visited ?? []).length}</small></h2>
+        <ul class="cl-list">
+          {(d.visited ?? []).map((name: string) => {
+            const rel = ((d.posts ?? {})[name] ?? []).map((s: string) => bySlug[s]).filter(Boolean);
+            return (
+              <li class="cl-row">
+                <div class="cl-head"><b>{name}</b></div>
+                {(d.notes ?? {})[name] && <p>{d.notes[name]}</p>}
+                {rel.length > 0 && <p class="cl-meta">{rel.map((p: any) => <a href={p.href}>《{p.title}》</a>)}</p>}
+              </li>
+            );
+          })}
+        </ul>
+        {(d.wish ?? []).length > 0 && (
+          <Fragment>
+            <h2 class="page-h2">想去</h2>
+            <p class="cl-tags">{d.wish.map((w: string) => <span>{w}</span>)}</p>
+          </Fragment>
+        )}
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'piano' && (
+      <Fragment>
+        <h2 class="page-h2">乐谱本里的曲子</h2>
+        <ul class="cl-list">
+          {(d.songs ?? []).map((s: any) => (
+            <li class="cl-row">
+              <div class="cl-head"><b>{s.title}</b><span class="cl-meta">{s.composer}</span></div>
+              <p class="cl-meta">每分钟 {s.bpm} 拍 · 上面的乐谱本里可以「示范」和「跟弹」</p>
+            </li>
+          ))}
+        </ul>
+        <h2 class="page-h2">练琴记录 <small>共 {items.length} 次 · {practiceMinutes} 分钟</small></h2>
+        <table class="cl-table">
+          <thead><tr><th>日期</th><th>曲子</th><th>时长</th><th>记一笔</th></tr></thead>
+          <tbody>
+            {items.map((x) => (
+              <tr><td>{x.dateLabel}</td><td>{x.piece}</td><td>{x.minutes} 分钟</td><td>{x.note}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'lab' && (
+      <ul class="cl-cards">
+        {items.map((x) => (
+          <li class="cl-card">
+            <span class={x.status === '可以玩' ? 'cl-status is-live' : 'cl-status'}>{x.status}</span>
+            <b>{x.title}</b>
+            <p>{x.desc}</p>
+            {x.href && <a class="cl-go" href={x.href}>去玩 →</a>}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    kind === 'goals' && (
+      <Fragment>
+        <h2 class="page-h2">{d.year} 年</h2>
+        <ul class="cl-list">
+          {items.map((g) => {
+            const pct = g.total ? Math.min(100, Math.round(((g.done ?? 0) / g.total) * 100)) : 0;
+            return (
+              <li class="cl-row">
+                <div class="cl-head"><b>{g.title}</b><span class="cl-meta">{g.done ?? 0} / {g.total} {g.unit}</span></div>
+                <div class="cl-bar" role="img" aria-label={`完成 ${pct}%`}><i style={`width:${pct}%`} /></div>
+              </li>
+            );
+          })}
+        </ul>
+        {(d.history ?? []).map((h: any) => (
+          <details class="cl-history">
+            <summary>{h.year} 年的旗</summary>
+            <ul class="cl-list">
+              {(h.items ?? []).map((g: any) => (
+                <li class="cl-row"><div class="cl-head"><b>{g.title}</b><span class="cl-meta">{g.done ?? 0} / {g.total} {g.unit}</span></div></li>
+              ))}
+            </ul>
+          </details>
+        ))}
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'friends' && (
+      <Fragment>
+        <ul class="cl-cards">
+          {items.map((f) => (
+            <li class="cl-card">
+              <b><a href={f.url} rel="noopener" target="_blank">{f.name} ↗</a></b>
+              <p>{f.desc}</p>
+            </li>
+          ))}
+        </ul>
+        <h2 class="page-h2">交换友链</h2>
+        <p class="page-lead">在<a href="/guestbook">留言板</a>留下你的博客名字、地址和一句话介绍，我挂好鸟屋后会回信。我的信息：</p>
+        <pre class="cl-pre">{`名字：${site.name}\n地址：${site.url}\n介绍：${site.description}`}</pre>
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'now' && (
+      <Fragment>
+        <h2 class="page-h2">最近在忙 <small>{d.updatedLabel ? `${year(d.updated)} 年 ${d.updatedLabel}更新` : ''}</small></h2>
+        <ol class="cl-list cl-now">{items.map((t) => <li class="cl-row">{t}</li>)}</ol>
+        {(d.history ?? []).map((h: any) => (
+          <details class="cl-history">
+            <summary>{fmt(h.updated)} 的图纸</summary>
+            <ol class="cl-list cl-now">{(h.items ?? []).map((t: string) => <li class="cl-row">{t}</li>)}</ol>
+          </details>
+        ))}
+        <p class="cl-meta">「Now 页面」的想法来自 Derek Sivers：写下最近真正在忙的几件事，过一阵就更新。</p>
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'search' && (
+      <Fragment>
+        <h2 class="page-h2">按标签找</h2>
+        <p class="cl-tags">{allTags.map(([t, n]) => <a href={tagHref(t)}>{t} <small>{n}</small></a>)}</p>
+        <p class="cl-meta">也可以去<a href="/archive">归档</a>按年份翻。</p>
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'subscribe' && (
+      <Fragment>
+        <h2 class="page-h2">RSS 是什么</h2>
+        <p class="page-lead">RSS 是一个公开的更新地址。把它放进 RSS 阅读器，以后这里有新文章，阅读器会自动收到，不用记着回来看。</p>
+        <pre class="cl-pre">{rss}</pre>
+        <p class="cl-meta">常见的阅读器：Feedly、Inoreader、NetNewsWire（苹果设备）、Reeder，浏览器扩展也有很多。</p>
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'guestbook' && (
+      <Fragment>
+        <h2 class="page-h2">全部来信</h2>
+        <p class="page-lead">用 GitHub 账号登录就能留言，我会回信。</p>
+        <div class="post-comments" data-giscus-term="guestbook">
+          <noscript><p class="page-empty">留言板需要打开 JavaScript。</p></noscript>
+        </div>
+      </Fragment>
+    )
+  }
+
+  {
+    kind === 'about' && (
+      <div class="cl-about">
+        <img class="cl-avatar" src="/treehouse/me/stand.webp" alt="树屋主人的卡通形象：戴圆眼镜、脖子上挂着耳机的长发女孩" width="249" height="480" loading="lazy" />
+        <div>
+          <h2 class="page-h2">你好</h2>
+          <p class="ab-bio">{d.bio}</p>
+
+          {(d.academic ?? []).length > 0 && (
+            <Fragment>
+              <h2 class="page-h2">学业成绩</h2>
+              <ul class="ab-stats">
+                {d.academic.map((a: any) => <li><b>{a.value}</b><span>{a.label}</span></li>)}
+              </ul>
+            </Fragment>
+          )}
+
+          {(d.awards ?? []).length > 0 && (
+            <Fragment>
+              <h2 class="page-h2">竞赛经历</h2>
+              <ul class="ab-awards">
+                {d.awards.map((a: any) => (
+                  <li><span class="ab-medal" aria-hidden="true">{a.tier}</span><div><b>{a.name}</b><span>{a.level}</span></div></li>
+                ))}
+              </ul>
+            </Fragment>
+          )}
+
+          {(d.research ?? []).length > 0 && (
+            <Fragment>
+              <h2 class="page-h2">科研经历</h2>
+              <ol class="cl-timeline ab-research">
+                {d.research.map((r: any) => (
+                  <li><div><b>{r.org}</b><span>{r.role}　导师：{r.mentor}</span></div></li>
+                ))}
+              </ol>
+            </Fragment>
+          )}
+
+          <h2 class="page-h2">找到我</h2>
+          <ul class="ab-contact">
+            {(d.links ?? []).map((l: any) => (
+              <li><span class="ab-k">{l.label}</span><a href={l.url} rel="noopener" target="_blank">{l.url.replace('https://', '')} ↗</a></li>
+            ))}
+            {d.email && <li><span class="ab-k">QQ 邮箱</span><span class="cl-email">{d.email}</span></li>}
+          </ul>
+
+          <h2 class="page-h2">这棵树屋</h2>
+          <p class="cl-meta">用 Astro 搭建，插画由 AI 生成后手工抠图。英文字体 testType 01（Xiaoyuan Gao / notyourtypefoundry），中文字体霞鹜漫黑和悠哉（SIL OFL）。评论来自 giscus，搜索来自 Pagefind。</p>
+        </div>
+      </div>
+    )
+  }
+</section>

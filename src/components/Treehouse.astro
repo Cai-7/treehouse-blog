@@ -3,6 +3,7 @@
 import '../styles/treehouse.css';
 import data from '../data/treehouse.json';
 import site from '../data/site.json';
+import { buildPanels, searchIndex } from '../lib/content';
 
 const IMG = '/treehouse/';
 const W = data.scene.w;
@@ -29,21 +30,30 @@ const stars = data.stars.map((s, i) => {
   return `left:${s.x}%;top:${s.y}%;--d:${d.toFixed(2)}s;--t:${t.toFixed(2)}s`;
 });
 
+// What every object shows when the camera moves in (built from src/content/).
+const { panels, posts } = await buildPanels();
+
 // Escape "<" so the JSON can never close its <script> tag early.
-const cardData = JSON.stringify({ scene: data.scene, items: data.items, floors: data.floors }).replace(/</g, '\\u003c');
+const cardData = JSON.stringify({
+  scene: data.scene,
+  items: data.items,
+  floors: data.floors,
+  panels,
+  posts: searchIndex(posts),
+}).replace(/</g, '\\u003c');
 ---
 
 <div class="th-scene" id="th-scene">
   <div class="th-stage">
     <img
       class="th-base th-base-day"
-      src={`${IMG}day.webp`}
+      src={`${IMG}day-clear.webp`}
       width="1086"
       height="1448"
       draggable="false"
       alt="一棵秋天的大树上搭着两层树屋：楼上是起居室，楼下是工作坊，树冠上有望远镜和小红旗，树下立着木牌和信箱。"
     />
-    <img class="th-base th-base-night" src={`${IMG}night.webp`} width="1086" height="1448" draggable="false" alt="" aria-hidden="true" />
+    <img class="th-base th-base-night" src={`${IMG}night-clear.webp`} width="1086" height="1448" draggable="false" alt="" aria-hidden="true" />
     <span class="th-moon" aria-hidden="true"></span>
     {stars.map((style) => <span class="th-star" style={style} aria-hidden="true"></span>)}
 

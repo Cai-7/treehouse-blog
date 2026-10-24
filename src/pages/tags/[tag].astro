@@ -1,0 +1,32 @@
+---
+// One page per tag: every article that carries it.
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import PostIndex from '../../components/PostIndex.astro';
+import Neighbours from '../../components/Neighbours.astro';
+import { loadPosts, tagCounts, tagHref, type Post } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await loadPosts();
+  return tagCounts(posts).map(([tag]) => ({ params: { tag }, props: { tag } }));
+}
+
+const { tag } = Astro.props as { tag: string };
+const posts = await loadPosts();
+const mine: Post[] = posts.filter((p) => p.tags.includes(tag));
+const others = tagCounts(posts).filter(([t]) => t !== tag).slice(0, 24);
+---
+
+<Base title={`#${tag}`} description={`标签「${tag}」下的文章`}>
+  <main class="page-view wrap">
+    <div class="page">
+      <SectionHead label={`#${tag}`} title={`#${tag}`} stats={`${mine.length} 篇`} />
+      <section class="sheet">
+        <PostIndex posts={mine} filter={false} />
+        <h2 class="page-h2">其他标签</h2>
+        <p class="cl-tags">{others.map(([t, n]) => <a href={tagHref(t)}>{t} <small>{n}</small></a>)}</p>
+      </section>
+      <Neighbours />
+    </div>
+  </main>
+</Base>
